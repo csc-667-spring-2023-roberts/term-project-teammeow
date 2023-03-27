@@ -2,6 +2,21 @@ const path = require("path");
 const express = require("express");
 const createError = require("http-errors");
 const app = express();
+if (process.env.NODE_ENV === "development") {
+  const livereload = require("livereload");
+  const connectLiveReload = require("connect-livereload");
+
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.watch(path.join(__dirname, "./", "static"));
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/");
+    }, 100);
+  });
+
+  app.use(connectLiveReload());
+}
+
 const PORT = process.env.PORT || 3000;
 
 //use pug
