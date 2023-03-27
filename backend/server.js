@@ -1,7 +1,13 @@
 const path = require("path");
 const express = require("express");
 const createError = require("http-errors");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 const app = express();
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 if (process.env.NODE_ENV === "development") {
   const livereload = require("livereload");
   const connectLiveReload = require("connect-livereload");
@@ -13,7 +19,6 @@ if (process.env.NODE_ENV === "development") {
       liveReloadServer.refresh("/");
     }, 100);
   });
-
   app.use(connectLiveReload());
 }
 
