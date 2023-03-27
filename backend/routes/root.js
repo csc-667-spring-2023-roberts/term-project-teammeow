@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", (request, response) => {
-  response.send("Hello world from within a route!");
-})
+  const name = "Meow";
+  response.render("home", {
+    title: "Hi World!",
+    message: "Our first template.",
+  });})
 
 module.exports = router;
