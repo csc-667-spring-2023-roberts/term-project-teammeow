@@ -19,9 +19,9 @@ if (process.env.NODE_ENV === "development") {
       liveReloadServer.refresh("/");
     }, 100);
   });
+  
   app.use(connectLiveReload());
 }
-
 const PORT = process.env.PORT || 3000;
 
 //use pug
