@@ -38,11 +38,12 @@
     "lint-staged": "^13.2.0",
     "livereload": "^0.9.3",
     "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
     "webpack": "^5.76.3",
     "webpack-cli": "^5.0.1"
   },
-                        "lint-staged": {
-    "src/**/*": "prettier --write --ignore-unknown",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
     "frontend/**/*.js": "webpack"
   }
 }
