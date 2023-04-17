@@ -17,13 +17,38 @@ router.post("/register", (req, res) => {
         .then((_) =>
           db.any(`SELECT * FROM users WHERE username = $1`, [username])
         )
-        .then((results) => res.json(results))
+        .then((results) =>
+          res
+            .status(201)
+            .json({ message: "User created successfully", user: results[0] })
+        )
         .catch((error) => {
           console.log(error);
           res.json({ error });
         });
     });
   });
+});
+
+router.post("/login", (req, res) => {
+  const username = req.body.username;
+  db.any(`SELECT * FROM users WHERE username = $1`, [username])
+    .then((results) => {
+      var user = results[0];
+      bcrypt.compare(req.body.password, user.password).then(function (result) {
+        if (result) {
+          res
+            .status(200)
+            .json({ message: "Logged in succesdully!", user: user });
+        } else {
+          res.status(401).json({ message: "Password not valid" });
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.json({ error });
+    });
 });
 
 module.exports = router;
