@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, "./", "./static")));
 
 const rootRoutes = require("./routes/root");
 const testRoutes = require("./routes/test/index.js");
+const userRoutes = require("./routes/user/index.js");
 
 const requestTime = require("./middleware/requestTime");
 
@@ -42,6 +43,7 @@ app.use(requestTime);
 
 app.use("/", rootRoutes);
 app.use("/test", testRoutes);
+app.use("/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
