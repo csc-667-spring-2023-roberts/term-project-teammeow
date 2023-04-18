@@ -4,49 +4,60 @@ const router = express.Router();
 const db = require("../../db/connection.js");
 const Users = require("../../db/users.js");
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const saltRounds = 15;
-  bcrypt.genSalt(saltRounds, function (err, salt) {
-    bcrypt.hash(req.body.password, saltRounds).then(function (hash) {
-      // Store hash in your password DB.
-      Users.create(username, email, hash)
-        .then((_) =>
-          db.any(`SELECT * FROM users WHERE username = $1`, [username])
-        )
-        .then((results) =>
-          res
-            .status(201)
-            .json({ message: "User created successfully", user: results[0] })
-        )
-        .catch((error) => {
-          console.log(error);
-          res.json({ error });
-        });
-    });
-  });
+  const salt = await bcrypt.genSalt(saltRounds);
+  const hash = await bcrypt.hash(req.body.password, salt);
+  try {
+    const { id } = await Users.create(username, email, hash);
+    req.session.user = {
+      id,
+      username,
+      email,
+    };
+    res
+      .status(201)
+      .json({
+        message: "User created successfully",
+        user: { id, username, email },
+      });
+  } catch (error) {
+    console.log(error);
+    res.json({ error });
+  }
 });
 
-router.post("/login", (req, res) => {
-  const username = req.body.username;
-  db.any(`SELECT * FROM users WHERE username = $1`, [username])
-    .then((results) => {
-      var user = results[0];
-      bcrypt.compare(req.body.password, user.password).then(function (result) {
-        if (result) {
-          res
-            .status(200)
-            .json({ message: "Logged in succesfully!", user: user });
-        } else {
-          res.status(401).json({ message: "Password not valid" });
-        }
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({ error });
-    });
+router.post("/login", async (req, res) => {
+  const user = req.body.username;
+  try {
+    const {
+      id,
+      username,
+      email,
+      password: hash,
+    } = await Users.findByUsername(user);
+    const result = await bcrypt.compare(req.body.password, hash);
+    if (result) {
+      req.session.user = {
+        id: id,
+        username: username,
+        email: email,
+      };
+      res
+        .status(200)
+        .json({
+          message: "Logged in succesfully!",
+          user: { id, username, email },
+        });
+    } else {
+      res.status(401).json({ message: "Password not valid" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ error });
+  }
 });
 
 module.exports = router;

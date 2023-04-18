@@ -3,12 +3,24 @@ const path = require("path");
 const express = require("express");
 const createError = require("http-errors");
 const morgan = require("morgan");
+const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 const cookieParser = require("cookie-parser");
+const db = require("./db/connection.js");
 const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+const sessionMiddleware = session({
+  store: new pgSession({ pgPromise: db }),
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+});
+
 if (process.env.NODE_ENV === "development") {
   const livereload = require("livereload");
   const connectLiveReload = require("connect-livereload");
@@ -23,6 +35,7 @@ if (process.env.NODE_ENV === "development") {
 
   app.use(connectLiveReload());
 }
+
 const PORT = process.env.PORT || 3000;
 
 //use pug
@@ -40,6 +53,8 @@ const requestTime = require("./middleware/requestTime");
 
 //requestTime middleware
 app.use(requestTime);
+//session middleware
+app.use(sessionMiddleware);
 
 app.use("/", rootRoutes);
 app.use("/test", testRoutes);
