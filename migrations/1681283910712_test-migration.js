@@ -42,8 +42,9 @@ exports.up = (pgm) => {
       default: null,
     },
     play_direction: {
-      type: "varchar(255)",
+      type: "boolean",
       notNull: true,
+      default: true,
     },
   });
   pgm.createTable("game_players", {
