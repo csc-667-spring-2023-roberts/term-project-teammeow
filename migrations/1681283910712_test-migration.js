@@ -16,10 +16,12 @@ exports.up = (pgm) => {
       notNull: true,
     },
     password: {
-      type: "varchar(255)",
+      type: "char(60)",
       notNull: true,
     },
   });
+  pgm.addConstraint("users", "username_unq", "UNIQUE(username)");
+  pgm.addConstraint("users", "email_unq", "UNIQUE(email)");
   pgm.createTable("games", {
     id: "id",
     players: {
