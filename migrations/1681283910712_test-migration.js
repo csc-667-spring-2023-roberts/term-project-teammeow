@@ -63,7 +63,7 @@ exports.up = (pgm) => {
   pgm.createTable("canonical_cards", {
     id: "id",
     value: {
-      type: "varchar(255)",
+      type: "integer",
       notNull: true,
     },
     color: {
@@ -92,6 +92,61 @@ exports.up = (pgm) => {
       notNull: true,
     },
   });
+  //10 - reverse
+  //11 - skip
+  //12 - +2
+  //13 - wild
+  //14 - +4
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('2','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('3','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('4','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('5','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('6','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('7','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('8','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('9','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('10','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('11','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('13','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('2','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('3','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('4','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('5','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('6','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('7','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('8','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('9','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('10','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('11','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('12','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('2','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('3','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('4','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('5','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('6','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('7','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('8','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('9','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('10','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('11','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('12','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('2','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('3','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('4','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('5','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('6','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('7','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('8','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('9','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('10','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('11','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('12','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('14','black' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('13','black' );`);
 };
 
 /**

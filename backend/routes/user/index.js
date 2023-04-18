@@ -39,7 +39,7 @@ router.post("/login", (req, res) => {
         if (result) {
           res
             .status(200)
-            .json({ message: "Logged in succesdully!", user: user });
+            .json({ message: "Logged in succesfully!", user: user });
         } else {
           res.status(401).json({ message: "Password not valid" });
         }
