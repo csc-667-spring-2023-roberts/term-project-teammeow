@@ -148,8 +148,8 @@ exports.up = (pgm) => {
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('10','red' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('11','red' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('12','red' );`);
-  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('14','black' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('13','black' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('14','black' );`);
 };
 
 /**
