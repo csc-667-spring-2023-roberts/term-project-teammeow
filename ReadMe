@@ -11,3 +11,13 @@ games table:
 play_direction:
 true = ascending
 false = descending
+
+game_deck:
+user_id:
+if positive int, then it is a user id, it is
+in that players hand
+
+        if 0 in draw deck
+        if -1 card has been played
+        if -2 then top is on top of the played deck,
+        play on this card
