@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title><%= title %></title>
+    <script src="/scripts/bundle.js"></script>
+    <link rel="stylesheet" href="/stylesheets/home.css" />
+  </head>
+  <body>
+    <h1>Login Page (Unauthenticated)</h1>
+
+    <%- include('partials/navigation') %>
+
+    <form method="post" action="<%= form_submit_url %>">
+      <div>
+        <label for="email">Email</label>
+        <div>
+          <input
+            name="email" 
+            autocomplete="email"
+            placeholder="Email/Username"
+          />
+        </div>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <div>
+          <input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Password"
+          />
+        </div>
+      </div>
+      <div>
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </body>
+</html>
