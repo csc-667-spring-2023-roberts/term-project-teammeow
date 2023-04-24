@@ -17,12 +17,10 @@ router.post("/register", async (req, res) => {
       username,
       email,
     };
-    res
-      .status(201)
-      .json({
-        message: "User created successfully",
-        user: { id, username, email },
-      });
+    res.status(201).json({
+      message: "User created successfully",
+      user: { id, username, email },
+    });
   } catch (error) {
     console.log(error);
     res.json({ error });
@@ -45,12 +43,10 @@ router.post("/login", async (req, res) => {
         username: username,
         email: email,
       };
-      res
-        .status(200)
-        .json({
-          message: "Logged in succesfully!",
-          user: { id, username, email },
-        });
+      res.status(200).json({
+        message: "Logged in succesfully!",
+        user: { id, username, email },
+      });
     } else {
       res.status(401).json({ message: "Password not valid" });
     }

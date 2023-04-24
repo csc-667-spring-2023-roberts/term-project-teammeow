@@ -47,9 +47,11 @@ app.use(express.static(path.join(__dirname, "./", "./static")));
 
 const rootRoutes = require("./routes/root");
 const testRoutes = require("./routes/test/index.js");
-const userRoutes = require("./routes/user/index.js");
+const userRoutes = require("./routes/auth/index.js");
+const lobbyRoutes = require("./routes/lobby/index.js");
 
 const requestTime = require("./middleware/requestTime");
+const isAuthenticated = require("./middleware/isAuthenticated");
 
 //requestTime middleware
 app.use(requestTime);
@@ -58,7 +60,9 @@ app.use(sessionMiddleware);
 
 app.use("/", rootRoutes);
 app.use("/test", testRoutes);
-app.use("/user", userRoutes);
+app.use("/auth", userRoutes);
+app.use(isAuthenticated);
+app.use("/lobby", lobbyRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

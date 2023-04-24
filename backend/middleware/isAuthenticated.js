@@ -1,9 +1,11 @@
 const isAuthenticated = (req, res, next) => {
-  const { user } = request.session;
+  const { user } = req.session;
 
   if (user != undefined && user.id != undefined) {
     next();
   } else {
-    res.redirect("/login");
+    res.redirect("/auth/login");
   }
 };
+
+module.exports = isAuthenticated;
