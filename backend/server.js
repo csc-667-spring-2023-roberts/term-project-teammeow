@@ -1,10 +1,11 @@
 require("dotenv").config();
 const path = require("path");
-const express = require("express");
-const createError = require("http-errors");
 const morgan = require("morgan");
+const express = require("express");
 const session = require("express-session");
+const createError = require("http-errors");
 const pgSession = require("connect-pg-simple")(session);
+const initSockets = require("./sockets/initialize.js");
 const cookieParser = require("cookie-parser");
 const db = require("./db/connection.js");
 const app = express();
@@ -49,6 +50,7 @@ const rootRoutes = require("./routes/root");
 const testRoutes = require("./routes/test/index.js");
 const userRoutes = require("./routes/auth/index.js");
 const lobbyRoutes = require("./routes/lobby/index.js");
+const chatRoutes = require("./routes/chat.js");
 
 const requestTime = require("./middleware/requestTime");
 const isAuthenticated = require("./middleware/isAuthenticated");
@@ -57,18 +59,20 @@ const isAuthenticated = require("./middleware/isAuthenticated");
 app.use(requestTime);
 //session middleware
 app.use(sessionMiddleware);
+const server = initSockets(app, sessionMiddleware);
 
 app.use("/", rootRoutes);
 app.use("/test", testRoutes);
 app.use("/auth", userRoutes);
 app.use(isAuthenticated);
 app.use("/lobby", lobbyRoutes);
+app.use("/chat", chatRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
-
-//http-errors middleware
+// http-errors middleware
 app.use((request, response, next) => {
   next(createError(404));
+});
+
+server.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
