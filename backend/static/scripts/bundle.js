@@ -3,6 +3,16 @@
       606: (t) => {
         t.exports = { CHAT_MESSAGE_RECEIVED: "chat-message-received" };
       },
+      291: (t) => {
+        t.exports = (t, e = []) => {
+          const s = document.createElement(t);
+          for (const t in e) {
+            const e = t.split("=");
+            s.setAttribute(e[0], e[1]);
+          }
+          return s;
+        };
+      },
     },
     e = {};
   function s(n) {
@@ -2005,6 +2015,7 @@
       Object.assign(gt, { Manager: ft, Socket: lt, io: gt, connect: gt });
       var mt = s(606),
         bt = s.n(mt);
+      s(291);
       const vt = gt(),
         kt = document.querySelector("#messages");
       vt.on(
