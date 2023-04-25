@@ -21,6 +21,7 @@ router.post("/register", async (req, res) => {
     //   message: "User created successfully",
     //   user: { id, username, email },
     // });
+    localStorage.setItem("user", req.session.user);
     res.redirect("/lobby");
   } catch (error) {
     console.log(error);
@@ -44,6 +45,8 @@ router.post("/login", async (req, res) => {
         username: username,
         email: email,
       };
+
+      res.locals.user = req.session.user;
       // res.status(200).json({
       //   message: "Logged in succesfully!",
       //   user: { id, username, email },

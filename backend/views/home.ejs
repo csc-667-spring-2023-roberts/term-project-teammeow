@@ -6,14 +6,6 @@
   </head>
   <body>
     <h1>Home Page (Unauthenticated)</h1>
-    <p><%= message %></p>
-
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/auth/login">Login</a></li>
-      <li><a href="/auth/register">Sign Up</a></li>
-      <li><a href="/lobby">Lobby</a></li>
-      <li><a href="/games/42">Game (42)</a></li>
-    </ul>
+    <%- include('partials/navigation.ejs') %>
   </body>
 </html>
