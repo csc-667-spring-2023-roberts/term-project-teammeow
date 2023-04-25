@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const events = require("../sockets/constants");
+const events = require("../../sockets/constants");
 
 router.post("/:id", async (request, response) => {
   const io = request.app.get("io");

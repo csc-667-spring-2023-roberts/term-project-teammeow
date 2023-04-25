@@ -4,6 +4,24 @@ const router = express.Router();
 const db = require("../../db/connection.js");
 const Users = require("../../db/users.js");
 
+router.get("/login", (req, res) => {
+  const context = {
+    title: "Login page",
+    form_submit_url: "/auth/login",
+  };
+
+  res.render("login", context);
+});
+
+router.get("/register", (req, res) => {
+  const context = {
+    title: "Sign-up page",
+    form_submit_url: "/auth/register",
+  };
+
+  res.render("register", context);
+});
+
 router.post("/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
