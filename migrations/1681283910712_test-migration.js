@@ -21,7 +21,17 @@ exports.up = (pgm) => {
     },
   });
   pgm.addConstraint("users", "username_unq", "UNIQUE(username)");
+  pgm.addConstraint(
+    "users",
+    "username_!blank",
+    "CHECK (CHAR_LENGTH(username) >= 1)"
+  );
   pgm.addConstraint("users", "email_unq", "UNIQUE(email)");
+  pgm.addConstraint(
+    "users",
+    "password_!blank",
+    "CHECK (CHAR_LENGTH(password) >= 1)"
+  );
   pgm.createTable("games", {
     id: "id",
     players: {
