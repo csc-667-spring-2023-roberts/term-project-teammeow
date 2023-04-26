@@ -23,23 +23,16 @@ router.get("/register", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const username = req.body.username;
-  const email = req.body.email;
-  const saltRounds = 15;
-  const salt = await bcrypt.genSalt(saltRounds);
-  const hash = await bcrypt.hash(req.body.password, salt);
+  const { username, email, password } = req.body;
+
+  const salt = await bcrypt.genSalt(15);
+  const hash = await bcrypt.hash(password, salt);
+
   try {
     const { id } = await Users.create(username, email, hash);
-    req.session.user = {
-      id,
-      username,
-      email,
-    };
-    // res.status(201).json({
-    //   message: "User created successfully",
-    //   user: { id, username, email },
-    // });
-    localStorage.setItem("user", req.session.user);
+
+    req.session.user = { id, username, email };
+
     res.redirect("/lobby");
   } catch (error) {
     console.log(error);
@@ -48,34 +41,27 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const user = req.body.username;
+  const { password, username } = req.body;
   try {
-    const {
-      id,
-      username,
-      email,
-      password: hash,
-    } = await Users.findByUsername(user);
-    const result = await bcrypt.compare(req.body.password, hash);
-    if (result) {
-      req.session.user = {
-        id: id,
-        username: username,
-        email: email,
-      };
+    const { password: hash, ...user } = await Users.findByUsername(username);
 
-      res.locals.user = req.session.user;
-      // res.status(200).json({
-      //   message: "Logged in succesfully!",
-      //   user: { id, username, email },
-      // });
+    if (await bcrypt.compare(password, hash)) {
+      req.session.user = user;
+      res.locals.user = user;
       res.redirect("/lobby");
     } else {
-      res.status(401).json({ message: "Password not valid" });
+      res.locals.errorMessage = "Username or password is incorrect";
+      res.render("login", {
+        title: "Login page",
+        form_submit_url: "/auth/login",
+      });
     }
   } catch (error) {
-    console.log(error);
-    res.json({ error });
+    res.locals.errorMessage = "Username or password is incorrect";
+    res.render("login", {
+      title: "Login page",
+      form_submit_url: "/auth/login",
+    });
   }
 });
 
