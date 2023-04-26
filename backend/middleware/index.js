@@ -3,5 +3,4 @@ module.exports = {
   requestTime: require("./requestTime"),
   isAuthenticated: require("./isAuthenticated"),
   isAuthenticatedRedirect: require("./isAuthenticatedRedirect"),
-  addSessionLocals: require("./addSessionLocals"),
 };

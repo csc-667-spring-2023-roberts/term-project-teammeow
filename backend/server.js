@@ -7,7 +7,6 @@ const createError = require("http-errors");
 const initSockets = require("./sockets/initialize");
 const cookieParser = require("cookie-parser");
 const app = express();
-const addSessionLocals = require("./middleware/addSessionLocals");
 
 const { session, requestTime } = require("./middleware");
 
@@ -46,8 +45,6 @@ app.use(requestTime);
 
 // session middleware
 app.use(session);
-
-app.use(addSessionLocals);
 
 // routes
 app.use("/", require("./routes"));

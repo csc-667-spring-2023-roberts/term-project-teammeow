@@ -17,7 +17,7 @@ router.get("/", isAuthenticated, (request, response) => {
 });
 
 router.use("/auth", authRoutes);
-// router.use(isAuthenticatedRedirect);
+router.use(isAuthenticatedRedirect);
 router.use("/game", gameRoutes);
 router.use("/api/game", gameAPIRoutes);
 router.use("/chat", chatRoutes);
