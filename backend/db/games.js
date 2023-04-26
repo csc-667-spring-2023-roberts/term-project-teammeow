@@ -8,6 +8,8 @@ class Games {
 
   static findByRoomTitle = (room_title) =>
     db.one("SELECT * FROM games WHERE room_title = $1", [room_title]);
+
+  static getAllGames = () => db.any("SELECT * from games");
 }
 
 module.exports = Games;
