@@ -2,34 +2,54 @@ import io from "socket.io-client";
 import events from "../backend/sockets/constants";
 
 const socket = io();
-
-const messageContainer = document.querySelector("#messages");
+const messageContainer = document.querySelector("#chat #messages");
+const messageInput = document.querySelector("#chat input#chatMessage");
+const messageSendBtn = document.querySelector("#chat button#send-btn");
 
 socket.on(events.CHAT_MESSAGE_RECEIVED, ({ username, message, timestamp }) => {
   const entry = document.createElement("div");
-  const nameTag = document.createElement("p");
-  const timeTag = document.createElement("p");
-  const messageTag = document.createElement("p");
+  const textMessage = document.createElement("div");
+  const time = document.createElement("p");
+  const sender = document.createElement("p");
+  const text = document.createElement("p");
 
-  nameTag.innerHTML = `${username} said: ${message}`;
+  text.innerHTML = message;
+  time.innerHTML = timestamp;
+  sender.innerHTML = username;
 
-  entry.append(nameTag, messageTag, timeTag);
+  entry.setAttribute("class", "text-message");
+
+  textMessage.append(text, time);
+  entry.append(sender, textMessage);
   messageContainer.appendChild(entry);
 });
 
-document
-  .querySelector("input#chatMessage")
-  .addEventListener("keydown", (event) => {
-    if (event.keyCode !== 13) {
-      return;
-    }
+messageInput.addEventListener("keydown", (event) => {
+  if (event.keyCode !== 13) {
+    return;
+  }
 
-    const message = event.target.value;
-    event.target.value = "";
+  const message = event.target.value;
+  const url = event.target.getAttribute("data-url");
 
-    fetch("/chat/0", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
+  event.target.value = "";
+
+  fetch(url, {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
   });
+});
+
+messageSendBtn.addEventListener("click", (e) => {
+  const message = messageInput.value;
+  const url = messageInput.getAttribute("data-url");
+
+  messageInput.value = "";
+
+  fetch(url, {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+});
