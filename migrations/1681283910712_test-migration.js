@@ -34,6 +34,11 @@ exports.up = (pgm) => {
   );
   pgm.createTable("games", {
     id: "id",
+    created_by: {
+      type: "integer",
+      references: "users",
+      notNull: true,
+    },
     players: {
       type: "integer",
       notNull: true,
@@ -104,6 +109,10 @@ exports.up = (pgm) => {
       notNull: true,
     },
   });
+  pgm.sql(
+    `INSERT INTO users(username, email, password) VALUES('nathan','nathan@email.com', 'password' );`
+  );
+
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','green' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('2','green' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('3','green' );`);
@@ -155,11 +164,21 @@ exports.up = (pgm) => {
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('13','black' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('14','black' );`);
 
-  pgm.sql(`INSERT INTO games(players, room_title) VALUES('4','Cool room' );`);
-  pgm.sql(`INSERT INTO games(players, room_title) VALUES('3','UnCool room' );`);
-  pgm.sql(`INSERT INTO games(players, room_title) VALUES('2','Hot room' );`);
-  pgm.sql(`INSERT INTO games(players, room_title) VALUES('5','Fast room' );`);
-  pgm.sql(`INSERT INTO games(players, room_title) VALUES('6','Hello room' );`);
+  pgm.sql(
+    `INSERT INTO games(created_by, players, room_title) VALUES('1', '4','Cool room' );`
+  );
+  pgm.sql(
+    `INSERT INTO games(created_by, players, room_title) VALUES('1', '3','UnCool room' );`
+  );
+  pgm.sql(
+    `INSERT INTO games(created_by, players, room_title) VALUES('1', '2','Hot room' );`
+  );
+  pgm.sql(
+    `INSERT INTO games(created_by, players, room_title) VALUES('1', '5','Fast room' );`
+  );
+  pgm.sql(
+    `INSERT INTO games(created_by, players, room_title) VALUES('1', '6','Hello room' );`
+  );
 };
 
 /**
