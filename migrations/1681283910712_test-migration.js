@@ -47,6 +47,9 @@ exports.up = (pgm) => {
       default: true,
     },
   });
+  pgm.addConstraint("games", "room_title_unq", "UNIQUE(room_title)");
+  pgm.addConstraint("games", "players_must_be_>=_2", "CHECK (players>=2)");
+  pgm.addConstraint("games", "players_must_be_<=_8", "CHECK (players<=8)");
   pgm.createTable("game_players", {
     game_id: {
       type: "integer",
@@ -80,10 +83,6 @@ exports.up = (pgm) => {
       references: "games",
       notNull: true,
     },
-    //user_id means that it is in that users hand
-    //0 means it in the draw up deck
-    //-2 means that it is in the played pile/deck
-    //-1 means it is the top card, the card to play on
     user_id: {
       type: "integer",
       references: "users",
@@ -95,11 +94,6 @@ exports.up = (pgm) => {
       notNull: true,
     },
   });
-  //10 - reverse
-  //11 - skip
-  //12 - +2
-  //13 - wild
-  //14 - +4
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','green' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('2','green' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('3','green' );`);
@@ -150,6 +144,12 @@ exports.up = (pgm) => {
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('12','red' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('13','black' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('14','black' );`);
+
+  pgm.sql(`INSERT INTO games(players, room_title) VALUES('4','Cool room' );`);
+  pgm.sql(`INSERT INTO games(players, room_title) VALUES('3','UnCool room' );`);
+  pgm.sql(`INSERT INTO games(players, room_title) VALUES('2','Hot room' );`);
+  pgm.sql(`INSERT INTO games(players, room_title) VALUES('5','Fast room' );`);
+  pgm.sql(`INSERT INTO games(players, room_title) VALUES('6','Hello room' );`);
 };
 
 /**

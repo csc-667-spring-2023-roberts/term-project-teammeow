@@ -4,6 +4,24 @@ const router = express.Router();
 const db = require("../../db/connection.js");
 const Users = require("../../db/users.js");
 
+router.get("/login", (req, res) => {
+  const context = {
+    title: "Login page",
+    form_submit_url: "/auth/login",
+  };
+
+  res.render("login", context);
+});
+
+router.get("/register", (req, res) => {
+  const context = {
+    title: "Sign-up page",
+    form_submit_url: "/auth/register",
+  };
+
+  res.render("register", context);
+});
+
 router.post("/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
@@ -17,11 +35,12 @@ router.post("/register", async (req, res) => {
       username,
       email,
     };
-    res.status(201).json({
-      message: "User created successfully",
-      user: { id, username, email },
-    });
-    // res.redirect("/lobby");
+    // res.status(201).json({
+    //   message: "User created successfully",
+    //   user: { id, username, email },
+    // });
+    localStorage.setItem("user", req.session.user);
+    res.redirect("/lobby");
   } catch (error) {
     console.log(error);
     res.json({ error });
@@ -44,11 +63,13 @@ router.post("/login", async (req, res) => {
         username: username,
         email: email,
       };
-      res.status(200).json({
-        message: "Logged in succesfully!",
-        user: { id, username, email },
-      });
-      // res.redirect("/lobby");
+
+      res.locals.user = req.session.user;
+      // res.status(200).json({
+      //   message: "Logged in succesfully!",
+      //   user: { id, username, email },
+      // });
+      res.redirect("/lobby");
     } else {
       res.status(401).json({ message: "Password not valid" });
     }

@@ -1,13 +1,16 @@
 <div id="chat">
+  <h2>Chat</h2>
   <div id="messages">
 
   </div>
-  <div id="input">
-    <input 
+  <div class="row">
+    <input
       type="text" 
       name="message" 
       id="chatMessage"
+      data-url="/chat/<%= id %>"
       placeholder="Message"
     >
+    <button id="send-btn">Send</button>
   </div>
 </div>

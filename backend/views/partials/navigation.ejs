@@ -1,7 +1,10 @@
 <ul>
   <li><a href="/">Home</a></li>
-  <li><a href="/auth/login">Login</a></li>
-  <li><a href="/auth/register">Register</a></li>
-  <li><a href="/lobby">Lobby</a></li>
-  <li><a href="/games/42">Game (42)</a></li>
+  <% if(locals.user) { %>
+    <li><a href="/lobby">Lobby</a></li>
+    <li><a href="/auth/logout">Logout</a></li>
+  <% } else { %>
+    <li><a href="/auth/login">Login</a></li>
+    <li><a href="/auth/register">Register</a></li>
+  <% } %>
 </ul>
