@@ -1,9 +1,9 @@
 const db = require("./connection");
 class Games {
-  static create = (players, room_title) =>
+  static create = (created_by, players, room_title) =>
     db.one(
-      "INSERT INTO games(players, room_title) VALUES($1, $2) RETURNING id",
-      [username, email, hash]
+      "INSERT INTO games(created_by, players, room_title) VALUES($1, $2, $3) RETURNING *",
+      [created_by, players, room_title]
     );
 
   static findByRoomTitle = (room_title) =>

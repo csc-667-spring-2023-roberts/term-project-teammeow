@@ -2,6 +2,7 @@ require("dotenv").config();
 const path = require("path");
 const morgan = require("morgan");
 const express = require("express");
+const bodyParser = require("body-parser");
 const createError = require("http-errors");
 const initSockets = require("./sockets/initialize");
 const cookieParser = require("cookie-parser");
@@ -12,6 +13,7 @@ const { session, requestTime } = require("./middleware");
 
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(bodyParser.json({ type: "application/*+json" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

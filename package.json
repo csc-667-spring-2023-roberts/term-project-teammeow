@@ -28,6 +28,7 @@
   "homepage": "https://github.com/csc-667-spring-2023-roberts/term-project-teammeow#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
     "connect-pg-simple": "^8.0.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",

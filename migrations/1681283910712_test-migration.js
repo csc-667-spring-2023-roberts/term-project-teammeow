@@ -110,7 +110,16 @@ exports.up = (pgm) => {
     },
   });
   pgm.sql(
-    `INSERT INTO users(username, email, password) VALUES('nathan','nathan@email.com', 'password' );`
+    `INSERT INTO users(username, email, password) VALUES('nathan','nathan@email.com', '$2b$15$bgKJ3bhnNwyG.ZRtAOdzCu7Bf7K6jyFmC.YlSO7OcrkNayrvFcIF6' );`
+  );
+  pgm.sql(
+    `INSERT INTO users(username, email, password) VALUES('ben','ben@email.com', '$2b$15$bgKJ3bhnNwyG.ZRtAOdzCu7Bf7K6jyFmC.YlSO7OcrkNayrvFcIF6' );`
+  );
+  pgm.sql(
+    `INSERT INTO users(username, email, password) VALUES('alex','alex@email.com', '$2b$15$bgKJ3bhnNwyG.ZRtAOdzCu7Bf7K6jyFmC.YlSO7OcrkNayrvFcIF6' );`
+  );
+  pgm.sql(
+    `INSERT INTO users(username, email, password) VALUES('emilee','emilee@email.com', '$2b$15$bgKJ3bhnNwyG.ZRtAOdzCu7Bf7K6jyFmC.YlSO7OcrkNayrvFcIF6' );`
   );
 
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('1','green' );`);
