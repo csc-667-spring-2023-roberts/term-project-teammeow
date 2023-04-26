@@ -1,15 +1,29 @@
 const db = require("./connection");
 class Games {
-  static create = (created_by, players, room_title) =>
+  static create = (createdBy, players, roomTitle) =>
     db.one(
       "INSERT INTO games(created_by, players, room_title) VALUES($1, $2, $3) RETURNING *",
-      [created_by, players, room_title]
+      [createdBy, players, roomTitle]
     );
 
-  static findByRoomTitle = (room_title) =>
-    db.one("SELECT * FROM games WHERE room_title = $1", [room_title]);
+  static getByGameByTitle = (roomTitle) =>
+    db.one("SELECT * FROM games WHERE room_title = $1", [roomTitle]);
 
   static getAllGames = () => db.any("SELECT * from games");
+
+  static getGameByID = (gameID) =>
+    db.one("SELECT * from games WHERE id = $1", [gameID]);
+
+  static join = (gameID, userID, joinOrder) =>
+    db.none(
+      "INSERT INTO game_players(game_id, user_id, join_order) VALUES($1, $2, $3)",
+      [gameID, userID, joinOrder]
+    );
+
+  static getjoinOrder = (gameID) =>
+    db.one("SELECT MAX(join_order) FROM game_players WHERE game_id = $1", [
+      gameID,
+    ]);
 }
 
 module.exports = Games;
