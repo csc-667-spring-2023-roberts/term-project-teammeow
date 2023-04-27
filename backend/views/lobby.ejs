@@ -4,25 +4,45 @@
 <body>
   <h1>AUTHENTICATED</h1>
   <%- include('partials/navigation') %>
-  <% const games = [{id: 1, players: 4, room_title: "Room 1"}] %>
-  <table>
-    <thead>
-      <th>Game room</th>
-      <th>Players</th>
-      <th>Action</th>
-    </thead>
-    <tbody>
+  <div>
+    <div>
+      <table>
+        <thead>
+          <th>Game room</th>
+          <th>Players</th>
+          <th>Action</th>
+        </thead>
+        <tbody>
+    
+          <% for (game of games) { %>
+            <tr>
+              <td><%= game.room_title %></td>
+              <td><%= game.players %></td>
+              <td><a href="/game/<%= game.id %>">Join</a></td>
+            </tr>
+          <% } %>
+    
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <form action="/game/create" method="post">
+        <input 
+          type="text"
+          name="roomTitle" 
+          placeholder="Room name"
+        />
 
-      <% for (game of games) { %>
-        <tr>
-          <td><%= game.room_title %></td>
-          <td><%= game.players %></td>
-          <td><a href="/game/<%= game.id %>">Join</a></td>
-        </tr>
-      <% } %>
-
-    </tbody>
-  </table>
+        <select name="players" id="">
+          <% for(let i = 2; i < 11; i++) { %>
+            <option value="<%= i %>"><%= i %></option>
+          <% } %>
+        </select>
+        <button type="submit">
+          Create
+        </button>
+      </form>
+    </div>
   </div>
 </body>
 </html>

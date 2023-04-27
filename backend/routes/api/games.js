@@ -2,28 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Games = require("../../db/games.js");
 
-router.post("/create", async (req, res) => {
-  console.log("hit create");
-  // const userID  = req.session.user.id;
-  const userID = 1;
-  const io = req.app.get("io");
-  console.log(req.body);
-  const players = req.body.players;
-  const roomTitle = req.body.room_title;
-  try {
-    const game = await Games.create(userID, players, roomTitle);
-    req.session.game = game;
-    res.locals.game = game;
-    await Games.join(game.id, userID, 1);
-    console.log("game created");
-    io.emit("game:created", { gameID: game.id, createdAt });
-    res.redirect(`/games/${game.id}`);
-  } catch (err) {
-    console.log(err);
-    res.redirect("/lobby");
-  }
-});
-
 router.post("/join/:id", async (req, res) => {
   // const userID  = req.session.user.id;
   const userID = 3;

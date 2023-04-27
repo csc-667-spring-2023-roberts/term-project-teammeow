@@ -5,7 +5,8 @@ const Games = require("../../db/games");
 router.get("/", async (req, res, next) => {
   try {
     const games = await Games.getAllGames();
-    res.render("lobby", { user: req.session.user, title: "Lobby" });
+
+    res.render("lobby", { title: "Lobby", games: games });
   } catch (err) {}
 });
 
