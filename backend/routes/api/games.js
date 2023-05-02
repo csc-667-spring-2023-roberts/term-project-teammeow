@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Games = require("../../db/games.js");
 
-router.post("/join/:id", async (req, res) => {
-  // const userID  = req.session.user.id;
-  const userID = 3;
+router.get("/join/:id", async (req, res) => {
+  const {
+    user: { id: userID },
+  } = req.session;
   const gameID = req.params.id;
   const io = req.app.get("io");
   try {
@@ -17,7 +18,7 @@ router.post("/join/:id", async (req, res) => {
       Games.join(gameID, userID, lastJoined + 1);
       req.session.game = game;
       // io.emit(`game:${game.id}:updated`, state)
-      res.redirect(`/games/${game.id}`);
+      res.redirect(`/game/${game.id}`);
     } else {
       //game is full, redidrect to lobby
       console.log("game is full");
