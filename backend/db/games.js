@@ -12,7 +12,7 @@ class Games {
   static getAllGames = () => db.any("SELECT * from games");
 
   static getGameByID = (gameID) =>
-    db.one("SELECT * from games WHERE id = $1", [gameID]);
+    db.one("SELECT * FROM games WHERE id = $1", [gameID]);
 
   static join = (gameID, userID, joinOrder) =>
     db.none(

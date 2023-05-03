@@ -93,6 +93,7 @@ exports.up = (pgm) => {
     },
   });
   pgm.createTable("game_deck", {
+    id: "id",
     game_id: {
       type: "integer",
       references: "games",
@@ -109,6 +110,15 @@ exports.up = (pgm) => {
       notNull: true,
     },
   });
+  pgm.sql(
+    `INSERT INTO users(id, username, email, password) VALUES('-2', 'play','play', 'play' );`
+  );
+  pgm.sql(
+    `INSERT INTO users(id, username, email, password) VALUES('-1', 'discard','discard', 'discard' );`
+  );
+  pgm.sql(
+    `INSERT INTO users(id, username, email, password) VALUES('0', 'draw','draw', 'draw' );`
+  );
   pgm.sql(
     `INSERT INTO users(username, email, password) VALUES('nathan','nathan@email.com', '$2b$15$bgKJ3bhnNwyG.ZRtAOdzCu7Bf7K6jyFmC.YlSO7OcrkNayrvFcIF6' );`
   );
