@@ -174,19 +174,20 @@ exports.up = (pgm) => {
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('14','black' );`);
 
   pgm.sql(
-    `INSERT INTO games(created_by, players, room_title) VALUES('1', '4','Cool room' );`
+    `INSERT INTO games(created_by, players, room_title) VALUES('1', '4','Nathans room' );`
+  );
+
+  pgm.sql(
+    `INSERT INTO game_players(game_id, user_id, join_order) VALUES('1', '1','1' );`
   );
   pgm.sql(
-    `INSERT INTO games(created_by, players, room_title) VALUES('1', '3','UnCool room' );`
+    `INSERT INTO game_players(game_id, user_id, join_order) VALUES('1', '4','2' );`
   );
   pgm.sql(
-    `INSERT INTO games(created_by, players, room_title) VALUES('1', '2','Hot room' );`
+    `INSERT INTO game_players(game_id, user_id, join_order) VALUES('1', '3','3' );`
   );
   pgm.sql(
-    `INSERT INTO games(created_by, players, room_title) VALUES('1', '5','Fast room' );`
-  );
-  pgm.sql(
-    `INSERT INTO games(created_by, players, room_title) VALUES('1', '6','Hello room' );`
+    `INSERT INTO game_players(game_id, user_id, join_order) VALUES('1', '2','4' );`
   );
 };
 
