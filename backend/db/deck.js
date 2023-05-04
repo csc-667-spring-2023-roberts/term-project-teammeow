@@ -47,6 +47,11 @@ class Deck {
     db.one("SELECT * from game_DECK WHERE game_id = $1 AND user_id = -2", [
       gameID,
     ]);
+  static getState = async (gameID, userID) => {
+    const hand = await this.getHand(gameID, userID);
+    const playCard = this.getPlayCard(gameID);
+    return { hand, playCard };
+  };
 }
 
 module.exports = Deck;

@@ -19,7 +19,8 @@ router.get("/join/:id", async (req, res) => {
       await Games.join(gameID, userID, lastJoined + 1);
       await Deck.dealHand(gameID, userID);
       req.session.game = game;
-      // io.emit(`game:${game.id}:updated`, state)
+      const state = await Deck.getState(gameID, userID);
+      io.emit(`game:${game.id}:updated`, state);
       res.redirect(`/game/${game.id}`);
     } else {
       //game is full, redidrect to lobby
