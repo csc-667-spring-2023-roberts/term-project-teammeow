@@ -52,6 +52,8 @@ router.post("/create", async (req, res) => {
     await Deck.dealHand(game.id, userID);
     console.log("game created");
     io.emit("game:created", { gameID: game.id, createdAt: game.created_at });
+    const state = await Deck.getState(gameID, userID);
+    io.emit(`game:${game.id}:updated`, state);
     res.redirect(`/game/${game.id}`);
   } catch (err) {
     console.log(err);
