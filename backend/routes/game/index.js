@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const Games = require("../../db/games");
+
+const { Games } = require("../../db");
 
 router.get("/:id", (req, res) => {
   // TODO

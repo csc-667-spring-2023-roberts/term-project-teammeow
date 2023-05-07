@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Games = require("../../db/games");
-const Deck = require("../../db/deck");
+
+const { Games, Deck } = require("../../db");
 
 router.post("/create", async (req, res) => {
   const io = req.app.get("io");

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Games = require("../../db/games");
+
+const { Games } = require("../../db");
 
 router.get("/", async (req, res, next) => {
   try {
