@@ -6,22 +6,22 @@
   <%- include('partials/navigation') %>
   <div>
     <div>
-      <table>
+      <table id="game-room-list">
         <thead>
+          <th>ID</th>
           <th>Game room</th>
           <th>Players</th>
           <th>Action</th>
         </thead>
         <tbody>
-    
           <% for (game of games) { %>
             <tr>
+              <td><%= game.id %></td>
               <td><%= game.room_title %></td>
               <td><%= game.players %></td>
-              <td><a href="api/game/join/<%= game.id %>">Join</a></td>
+              <td><button onclick="joinGame('<%= game.id %>')">Join</button></td>
             </tr>
           <% } %>
-    
         </tbody>
       </table>
     </div>
@@ -29,11 +29,11 @@
       <form action="api/game/create" method="post">
         <input 
           type="text"
-          name="room_title" 
+          name="room" 
           placeholder="Room name"
         />
-
-        <select name="players" id="">
+        <select name="players">
+          <option value="">Select</option>
           <% for(let i = 2; i < 11; i++) { %>
             <option value="<%= i %>"><%= i %></option>
           <% } %>
@@ -44,5 +44,14 @@
       </form>
     </div>
   </div>
+  <script>
+    const joinGame = (id) => {
+      fetch(`/api/game/join/${id}`, { method: "post" })
+      .then(res => {
+        document.location.href = `/game/${id}`
+      })
+      .catch(err => alert("THE ROOM IS FULL!"))
+    }
+  </script>
 </body>
 </html>
