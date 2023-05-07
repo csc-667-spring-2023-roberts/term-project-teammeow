@@ -49,7 +49,6 @@ router.post("/login", async (req, res) => {
 
     if (await bcrypt.compare(password, hash)) {
       req.session.user = user;
-      res.locals.user = user;
       res.redirect("/lobby");
     } else {
       res.locals.errorMessage = "Username or password is incorrect";
