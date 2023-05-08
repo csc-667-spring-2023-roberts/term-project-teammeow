@@ -9,7 +9,6 @@ router.post("/create", async (req, res) => {
   const {
     user: { id: userID },
   } = req.session;
-
   try {
     const game = await Games.create(userID, players, room);
     await Games.join(game.id, userID, 1);
@@ -30,7 +29,6 @@ router.post("/join/:id", async (req, res) => {
   const {
     user: { id: userID },
   } = req.session;
-
   try {
     const game = await Games.getGameByID(gameID);
     const { max: lastJoined } = await Games.getjoinOrder(gameID);
@@ -42,7 +40,7 @@ router.post("/join/:id", async (req, res) => {
 
       io.emit(`game:${game.id}:updated`, state);
 
-      res.redirect(`/game/${game.id}`);
+      res.status(200).json({ message: "Success" });
     } else {
       res.status(401).json({ message: "The room is full" });
     }
