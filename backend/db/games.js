@@ -9,7 +9,10 @@ class Games {
   static getByGameByTitle = (roomTitle) =>
     db.one("SELECT * FROM games WHERE room_title = $1", [roomTitle]);
 
-  static getAllGames = () => db.any("SELECT * from games");
+  static getAllGames = () =>
+    db.any(
+      "SELECT g.*, COUNT(p.user_id) as players_joined FROM games g left JOIN game_players p ON g.id = p.game_id GROUP BY g.id, g.players, g.room_title"
+    );
 
   static getGameByID = (gameID) =>
     db.one("SELECT * FROM games WHERE id = $1", [gameID]);
