@@ -82,3 +82,108 @@ th {
 #chat #send-btn {
   width: 70px;
 }
+
+.card {
+  width: 100px;
+  border-radius: 8px;
+  position: relative;
+  border: solid 1px grey;
+}
+
+.card .label {
+  top: 0px;
+  height: 100%;
+  display: flex;
+  width: inherit;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+}
+
+.card > span {
+  top: 15px;
+  left: 15px;
+  z-index: 99;
+  color: white;
+  font-size: 18px;
+  position: absolute;
+}
+
+.card > span:last-child {
+  top: auto;
+  left: auto;
+  right: 15px;
+  bottom: 15px;
+  transform: rotate(180deg);
+}
+
+.card img {
+  width: inherit;
+  height: inherit;
+}
+
+.card-red {
+  background-color: red;
+}
+.card-blue {
+  background-color: blue;
+}
+.card-green {
+  background-color: green;
+}
+.card-yellow {
+  background-color: yellow;
+}
+
+.card .label span {
+  font-size: 30px;
+}
+.card-red .label span {
+  color: red;
+}
+.card-blue .label span {
+  color: blue;
+}
+.card-green .label span {
+  color: green;
+}
+.card-yellow .label span {
+  color: yellow;
+}
+
+.card span.card-1::before {
+  content: "1";
+}
+.card span.card-2::before {
+  content: "2";
+}
+.card span.card-3::before {
+  content: "3";
+}
+.card span.card-4::before {
+  content: "4";
+}
+.card span.card-5::before {
+  content: "5";
+}
+.card span.card-6::before {
+  content: "6";
+}
+.card span.card-7::before {
+  content: "7";
+}
+.card span.card-8::before {
+  content: "8";
+}
+.card span.card-9::before {
+  content: "9";
+}
+.card span.card-10::before {
+  content: "10";
+}
+.card span.card-11::before {
+  content: "11";
+}
+.card span.card-12::before {
+  content: "12";
+}
