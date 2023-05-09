@@ -1,9 +1,9 @@
 const db = require("./connection");
 class Games {
-  static create = (createdBy, players, roomTitle) =>
+  static create = (createdBy, maxPlayers, roomTitle) =>
     db.one(
-      "INSERT INTO games(created_by, players, room_title) VALUES($1, $2, $3) RETURNING *",
-      [createdBy, players, roomTitle]
+      "INSERT INTO games(created_by, players, players_joined, room_title) VALUES($1, $2, $3, $4) RETURNING *",
+      [createdBy, maxPlayers, 1, roomTitle]
     );
 
   static getByGameByTitle = (roomTitle) =>
@@ -14,11 +14,17 @@ class Games {
   static getGameByID = (gameID) =>
     db.one("SELECT * FROM games WHERE id = $1", [gameID]);
 
-  static join = (gameID, userID, joinOrder) =>
+  static join = (gameID, userID, joinOrder) => {
+    //update
+    db.none("UPDATE games SET players_joined = $1 WHERE id = $2 ", [
+      joinOrder,
+      gameID,
+    ]);
     db.none(
       "INSERT INTO game_players(game_id, user_id, join_order) VALUES($1, $2, $3)",
       [gameID, userID, joinOrder]
     );
+  };
 
   static getjoinOrder = (gameID) =>
     db.one("SELECT MAX(join_order) FROM game_players WHERE game_id = $1", [

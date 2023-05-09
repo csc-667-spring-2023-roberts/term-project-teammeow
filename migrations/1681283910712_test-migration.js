@@ -43,6 +43,10 @@ exports.up = (pgm) => {
       type: "integer",
       notNull: true,
     },
+    players_joined: {
+      type: "integer",
+      notNull: true,
+    },
     room_title: {
       type: "varchar(255)",
       notNull: true,
