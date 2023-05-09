@@ -1,12 +1,30 @@
 const router = require("express").Router();
 const events = require("../../sockets/constants");
 
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 router.post("/:id", async (request, response) => {
+  const date = new Date();
   const io = request.app.get("io");
   const { message } = request.body;
-  const { username, id } = request.session.user;
+  const { username } = request.session.user;
 
-  const timestamp = "Apr 23";
+  const timestamp = `${
+    months[date.getMonth()]
+  } ${date.getDate()}, ${date.getFullYear()}`;
 
   // TODO: CHAT messages are not stored
 
