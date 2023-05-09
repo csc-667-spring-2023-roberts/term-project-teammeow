@@ -11,6 +11,7 @@
           <th>ID</th>
           <th>Game room</th>
           <th>Players</th>
+          <th>Players joined</th>
           <th>Action</th>
         </thead>
         <tbody>
@@ -19,6 +20,7 @@
               <td><%= game.id %></td>
               <td><%= game.room_title %></td>
               <td><%= game.players %></td>
+              <td><%= game.players_joined %></td>
               <td><button onclick="joinGame('<%= game.id %>')">Join</button></td>
             </tr>
           <% } %>
