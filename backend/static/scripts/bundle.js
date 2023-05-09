@@ -30,6 +30,12 @@
                 });
             });
       },
+      390: (t) => {
+        t.exports = () => {
+          const t = location.pathname.split("/");
+          return t[t.length - 1];
+        };
+      },
     },
     e = {};
   function s(n) {
@@ -38,12 +44,16 @@
     var r = (e[n] = { exports: {} });
     return t[n](r, r.exports, s), r.exports;
   }
-  (s.d = (t, e) => {
-    for (var n in e)
-      s.o(e, n) &&
-        !s.o(t, n) &&
-        Object.defineProperty(t, n, { enumerable: !0, get: e[n] });
+  (s.n = (t) => {
+    var e = t && t.__esModule ? () => t.default : () => t;
+    return s.d(e, { a: e }), e;
   }),
+    (s.d = (t, e) => {
+      for (var n in e)
+        s.o(e, n) &&
+          !s.o(t, n) &&
+          Object.defineProperty(t, n, { enumerable: !0, get: e[n] });
+    }),
     (s.o = (t, e) => Object.prototype.hasOwnProperty.call(t, e)),
     (s.r = (t) => {
       "undefined" != typeof Symbol &&
@@ -238,13 +248,13 @@
       }
       const v = m.setTimeout,
         k = m.clearTimeout;
-      function w(t, e) {
+      function _(t, e) {
         e.useNativeTimers
           ? ((t.setTimeoutFn = v.bind(m)), (t.clearTimeoutFn = k.bind(m)))
           : ((t.setTimeoutFn = m.setTimeout.bind(m)),
             (t.clearTimeoutFn = m.clearTimeout.bind(m)));
       }
-      class _ extends Error {
+      class w extends Error {
         constructor(t, e, s) {
           super(t),
             (this.description = e),
@@ -256,13 +266,13 @@
         constructor(t) {
           super(),
             (this.writable = !1),
-            w(this, t),
+            _(this, t),
             (this.opts = t),
             (this.query = t.query),
             (this.socket = t.socket);
         }
         onError(t, e, s) {
-          return super.emitReserved("error", new _(t, e, s)), this;
+          return super.emitReserved("error", new w(t, e, s)), this;
         }
         open() {
           return (this.readyState = "opening"), this.doOpen(), this;
@@ -348,7 +358,7 @@
       class D extends g {
         constructor(t, e) {
           super(),
-            w(this, e),
+            _(this, e),
             (this.opts = e),
             (this.method = e.method || "GET"),
             (this.uri = t),
@@ -777,7 +787,7 @@
                 (e.port = t.port),
                 t.query && (e.query = t.query))
               : e.host && (e.hostname = z(e.host).host),
-            w(this, e),
+            _(this, e),
             (this.secure =
               null != e.secure
                 ? e.secure
@@ -1783,7 +1793,7 @@
             e && "object" == typeof e && ((s = e), (e = void 0)),
             ((s = s || {}).path = s.path || "/socket.io"),
             (this.opts = s),
-            w(this, s),
+            _(this, s),
             this.reconnection(!1 !== s.reconnection),
             this.reconnectionAttempts(s.reconnectionAttempts || 1 / 0),
             this.reconnectionDelay(s.reconnectionDelay || 1e3),
@@ -2027,11 +2037,14 @@
         );
       }
       Object.assign(gt, { Manager: ft, Socket: lt, io: gt, connect: gt });
-      var mt = s(606);
-      const bt = gt(),
-        vt = document.querySelector("#chat #messages");
-      bt.on(
-        mt.CHAT_MESSAGE_RECEIVED,
+      var mt = s(390),
+        bt = s.n(mt),
+        vt = s(606);
+      const kt = gt(),
+        _t = bt()(),
+        wt = document.querySelector("#chat #messages");
+      kt.on(
+        vt.CHAT_MESSAGE_RECEIVED + `:${_t}`,
         ({ username: t, message: e, timestamp: s }) => {
           const n = document.createElement("div"),
             i = document.createElement("div"),
@@ -2044,7 +2057,7 @@
             n.setAttribute("class", "text-message"),
             i.append(o, r),
             n.append(a, i),
-            vt.appendChild(n);
+            wt.appendChild(n);
         }
       );
     })();
