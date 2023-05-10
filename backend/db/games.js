@@ -6,7 +6,7 @@ class Games {
       [createdBy, players, roomTitle]
     );
 
-  static getByGameByTitle = (roomTitle) =>
+  static getGameByTitle = (roomTitle) =>
     db.one("SELECT * FROM games WHERE room_title = $1", [roomTitle]);
 
   static getAllGames = () =>
@@ -17,11 +17,19 @@ class Games {
   static getGameByID = (gameID) =>
     db.one("SELECT * FROM games WHERE id = $1", [gameID]);
 
-  static join = (gameID, userID, joinOrder) =>
-    db.none(
-      "INSERT INTO game_players(game_id, user_id, join_order) VALUES($1, $2, $3)",
-      [gameID, userID, joinOrder]
+  static join = async (gameID, userID, joinOrder) => {
+    const result = await db.any(
+      "SELECT * FROM game_players WHERE game_id = $1 AND user_id = $2",
+      [gameID, userID]
     );
+
+    if (result.length == 0) {
+      db.none(
+        "INSERT INTO game_players(game_id, user_id, join_order) VALUES($1, $2, $3)",
+        [gameID, userID, joinOrder]
+      );
+    }
+  };
 
   static getjoinOrder = (gameID) =>
     db.one("SELECT MAX(join_order) FROM game_players WHERE game_id = $1", [
