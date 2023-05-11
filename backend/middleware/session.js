@@ -3,7 +3,7 @@ const pgSession = require("connect-pg-simple")(session);
 const db = require("../db/connection");
 
 module.exports = session({
-  store: new pgSession({ pgPromise: db }),
+  store: new pgSession({ pgPromise: db, createTableIfMissing: true }),
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
