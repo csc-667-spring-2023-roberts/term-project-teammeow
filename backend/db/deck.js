@@ -40,18 +40,26 @@ class Deck {
 
   static getHand = (gameID, userID) =>
     db.many(
-      "SELECT * from game_deck INNER JOIN canonical_cards ON game_deck.card_id = canonical_cards.id WHERE game_id = $1 AND user_id = $2 ",
+      `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
+      FROM game_deck 
+      INNER JOIN canonical_cards 
+      ON game_deck.card_id = canonical_cards.id 
+      WHERE game_id = $1 AND user_id = $2 `,
       [gameID, userID]
     );
   static getPlayCard = (gameID) =>
     db.one(
-      "SELECT * from game_deck INNER JOIN canonical_cards ON game_deck.card_id = canonical_cards.id WHERE game_id = $1 AND user_id = -2 ",
+      `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
+      FROM game_deck 
+      INNER JOIN canonical_cards 
+      ON game_deck.card_id = canonical_cards.id 
+      WHERE game_id = $1 AND user_id = -2 `,
       [gameID]
     );
   static getState = async (gameID, userID) => {
     const hand = await this.getHand(gameID, userID);
-    const playCard = this.getPlayCard(gameID);
-    return { hand, playCard };
+    const playCard = await this.getPlayCard(gameID);
+    return { user_id: userID, game_id: gameID, hand, playCard };
   };
 }
 
