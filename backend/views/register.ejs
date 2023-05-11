@@ -4,8 +4,10 @@
     <h1>Sign Up Page</h1>
 
     <%- include('partials/navigation') %>
-
     <form method="post" action="<%= form_submit_url %>">
+      <% if(locals.errorMessage) { %>
+        <p><%= locals.errorMessage %></p>
+      <% } %>
       <div>
         <label for="username">Username</label>
         <div>

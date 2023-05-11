@@ -50,9 +50,12 @@
     const joinGame = (id) => {
       fetch(`/api/game/join/${id}`, { method: "post" })
       .then(res => {
-        document.location.href = `/game/${id}`
+        if(res.status == 200){
+          document.location.href = `/game/${id}`;
+        } else {
+          alert("The room is full!")
+        }
       })
-      .catch(err => alert("THE ROOM IS FULL!"))
     }
   </script>
 </body>

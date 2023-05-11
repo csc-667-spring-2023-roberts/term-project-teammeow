@@ -25,21 +25,25 @@ router.get("/register", (req, res) => {
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
-  const salt = await bcrypt.genSalt(15);
-  const hash = await bcrypt.hash(password, salt);
+  if (username.length > 0 && email.length > 0 && password.length > 0) {
+    try {
+      const salt = await bcrypt.genSalt(15);
+      const hash = await bcrypt.hash(password, salt);
+      const { id } = await Users.create(username, email, hash);
 
-  // TODO: validate username, email and password
-  // before storing to db
+      req.session.user = { id, username, email };
 
-  try {
-    const { id } = await Users.create(username, email, hash);
-
-    req.session.user = { id, username, email };
-
-    res.redirect("/lobby");
-  } catch (error) {
-    console.log(error);
-    res.json({ error });
+      res.redirect("/lobby");
+    } catch (error) {
+      console.log(error);
+      res.json({ error });
+    }
+  } else {
+    res.locals.errorMessage = "Invalid credentials!";
+    res.render("register", {
+      title: "Sign-up page",
+      form_submit_url: "/auth/register",
+    });
   }
 });
 
