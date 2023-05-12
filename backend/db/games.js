@@ -17,6 +17,15 @@ class Games {
   static getGameByID = (gameID) =>
     db.one("SELECT * FROM games WHERE id = $1", [gameID]);
 
+  static isJoined = async (gameID, userID) => {
+    const result = await db.any(
+      "SELECT * FROM game_players WHERE game_id = $1 AND user_id = $2",
+      [gameID, userID]
+    );
+
+    return result.length > 0;
+  };
+
   static join = async (gameID, userID, joinOrder) => {
     const result = await db.any(
       "SELECT * FROM game_players WHERE game_id = $1 AND user_id = $2",
