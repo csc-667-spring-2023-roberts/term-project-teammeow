@@ -21,7 +21,7 @@
               <td><%= game.room_title %></td>
               <td><%= game.players %></td>
               <td><%= game.players_joined %></td>
-              <td><button onclick="joinGame('<%= game.id %>')">Join</button></td>
+              <td><a href="/game/<%= game.id %>">Join</a></td>
             </tr>
           <% } %>
         </tbody>
@@ -46,17 +46,5 @@
       </form>
     </div>
   </div>
-  <script>
-    const joinGame = (id) => {
-      fetch(`/api/game/join/${id}`, { method: "post" })
-      .then(res => {
-        if(res.status == 200){
-          document.location.href = `/game/${id}`;
-        } else {
-          alert("The room is full!")
-        }
-      })
-    }
-  </script>
 </body>
 </html>

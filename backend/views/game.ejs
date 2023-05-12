@@ -1,14 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head') %>
+<script>
+  (function(){
+    const path = location.pathname.split("/");
+    const id = path[path.length - 1];
+    fetch(`/api/game/join/${id}`, { method: "post" })
+    .then(res => {
+      if(res.status !== 200) {
+        document.location.href = "/lobby";
+      }
+    })
+  })()
+</script>
 <body>
-  <div class="row justify-space-between">
-    <div>
+  <div>
+    <div class="col">
       <%- include('partials/navigation') %>
     </div>
-    <div>
-      <%- include('partials/chat') %>
-      <%- include('partials/card') %>
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <%- include('partials/card') %>
+        </div>
+        <div class="col">
+          <%- include('partials/chat') %>
+        </div>
+      </div>
     </div>
   </div>
 </body>
