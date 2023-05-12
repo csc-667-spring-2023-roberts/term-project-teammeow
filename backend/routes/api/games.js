@@ -45,7 +45,21 @@ router.post("/join/:id", async (req, res) => {
 });
 
 router.post("/start/:id", (req, res) => {
+  const { id: gameID } = req.params;
+  const { id: userID } = req.session.user;
+
   // TODO: IMPLEMENT THIS
+
+  const io = req.app.get("io");
+
+  io.emit(`deal:${gameID}:${userID}`, {
+    hands: [
+      { color: "red", value: "1" },
+      { color: "blue", value: "2" },
+    ],
+  });
+
+  res.status(200).json({ message: "Success!" });
 });
 
 module.exports = router;

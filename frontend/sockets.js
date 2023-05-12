@@ -1,14 +1,17 @@
 import socket from "socket.io-client";
-import getGroupId from "./getGroupId";
+import getGameID from "./getGameId";
+import getUserID from "./getUserId";
+import createCard from "./createCard";
 import { CHAT_MESSAGE_RECEIVED } from "../backend/sockets/constants";
 
 const io = socket();
-const groupID = getGroupId();
+const gameID = getGameID();
+const userID = getUserID();
 
 const messageDiv = document.querySelector("#chat #messages");
 
 io.on(
-  CHAT_MESSAGE_RECEIVED + `:${groupID}`,
+  CHAT_MESSAGE_RECEIVED + `:${gameID}`,
   ({ username, message, timestamp }) => {
     const div = document.createElement("div");
     const textDiv = document.createElement("div");
@@ -28,3 +31,12 @@ io.on(
     messageDiv.appendChild(div);
   }
 );
+
+io.on(`deal:${gameID}:${userID}`, ({ hands }) => {
+  const cardsDiv = document.querySelector("#cards");
+
+  for (const { value, color } of hands) {
+    const card = createCard(value, color);
+    cardsDiv.append(card);
+  }
+});
