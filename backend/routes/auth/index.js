@@ -32,6 +32,7 @@ router.post("/register", async (req, res) => {
       const { id } = await Users.create(username, email, hash);
 
       req.session.user = { id, username, email };
+      res.cookie("userID", id);
 
       res.redirect("/lobby");
     } catch (error) {
@@ -54,6 +55,8 @@ router.post("/login", async (req, res) => {
 
     if (await bcrypt.compare(password, hash)) {
       req.session.user = user;
+      res.cookie("userID", user.id);
+
       res.redirect("/lobby");
     } else {
       res.locals.errorMessage = "Username or password is incorrect";
@@ -63,6 +66,7 @@ router.post("/login", async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     res.locals.errorMessage = "Username or password is incorrect";
     res.render("login", {
       title: "Login page",
