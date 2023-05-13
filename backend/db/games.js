@@ -44,6 +44,9 @@ class Games {
     db.one("SELECT MAX(join_order) FROM game_players WHERE game_id = $1", [
       gameID,
     ]);
+
+  static getPlayers = (gameID) =>
+    db.many("SELECT user_id FROM game_players WHERE game_id = $1", [gameID]);
 }
 
 module.exports = Games;

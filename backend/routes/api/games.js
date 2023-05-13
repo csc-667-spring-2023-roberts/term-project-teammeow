@@ -44,22 +44,25 @@ router.post("/join/:id", async (req, res) => {
   }
 });
 
-router.post("/start/:id", (req, res) => {
+router.post("/start/:id", async (req, res) => {
   const { id: gameID } = req.params;
-  const { id: userID } = req.session.user;
+  // const { id: userID } = req.session.user;
 
   // TODO: IMPLEMENT THIS
-
-  const io = req.app.get("io");
-
-  io.emit(`deal:${gameID}:${userID}`, {
-    hands: [
-      { color: "red", value: "1" },
-      { color: "blue", value: "2" },
-    ],
-  });
-
-  res.status(200).json({ message: "Success!" });
+  try {
+    await Deck.create(gameID);
+    const players = await Games.getPlayers(gameID);
+    players.forEach(async (x) => {
+      const userID = x.user_id;
+      await Deck.dealHand(gameID, userID);
+      const hands = await Deck.getHand(gameID, userID);
+      const io = req.app.get("io");
+      io.emit(`deal:${gameID}:${userID}`, { hands });
+    });
+    res.status(200).json({ message: "Success!" });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = router;
