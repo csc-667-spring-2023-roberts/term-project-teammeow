@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head') %>
+<script>
+  const joinGame = (id) => {
+    fetch(`/api/game/join/${id}`, { method: "post" })
+    .then(res => res.json())
+    .then(json => {
+      document.location.href = json.url
+    })
+  }
+</script>
 <body>
   <h1>AUTHENTICATED</h1>
   <%- include('partials/navigation') %>
@@ -21,7 +30,7 @@
               <td><%= game.room_title %></td>
               <td><%= game.players %></td>
               <td><%= game.players_joined %></td>
-              <td><a href="/game/<%= game.id %>">Join</a></td>
+              <td><a onclick="joinGame('<%= game.id %>')">Join</a></td>
             </tr>
           <% } %>
         </tbody>

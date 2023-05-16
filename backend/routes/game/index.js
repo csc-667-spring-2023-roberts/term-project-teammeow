@@ -2,13 +2,17 @@ const router = require("express").Router();
 
 const { Games } = require("../../db");
 
-router.get("/:id", (req, res) => {
-  // TODO
-  // check if room not full
-  // if full redirect to lobby
-  // else join game
+router.get("/:id", async (req, res) => {
+  const { id: gameID } = req.params;
+  const { id: userID } = req.session.user;
 
-  res.render("game", { id: req.params.id, title: "Game" });
+  const userJoined = await Games.isJoined(gameID, userID);
+
+  if (userJoined) {
+    res.render("game", { title: "Game" });
+  } else {
+    res.redirect("/lobby");
+  }
 });
 
 module.exports = router;

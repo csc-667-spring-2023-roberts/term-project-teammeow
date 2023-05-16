@@ -33,14 +33,14 @@ router.post("/join/:id", async (req, res) => {
       if (game.players > lastJoined) {
         await Games.join(gameID, userID, lastJoined + 1);
       } else {
-        res.status(401).json({ message: "The room is full" });
+        res.status(401).json({ url: `/lobby` });
         return;
       }
     }
 
-    res.status(200).json({ message: "Success" });
+    res.status(200).json({ url: `/game/${gameID}` });
   } catch (err) {
-    res.redirect("/lobby");
+    res.status(401).json({ url: `/lobby` });
   }
 });
 

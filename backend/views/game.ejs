@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head') %>
-<script>
-  (function(){
-    const path = location.pathname.split("/");
-    const id = path[path.length - 1];
-    fetch(`/api/game/join/${id}`, { method: "post" })
-    .then(res => {
-      if(res.status !== 200) {
-        document.location.href = "/lobby";
-      }
-    })
-  })()
-</script>
 <body>
   <div>
     <div class="col">
@@ -23,7 +11,7 @@
     </div>
 
     <div id="play-card">
-      
+
     </div>
 
     <div id="cards" class="row">
