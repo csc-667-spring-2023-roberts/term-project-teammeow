@@ -2,16 +2,10 @@
   margin: 0px;
   padding: 0px;
 }
-.col {
-  flex: 1;
-}
 .row {
   display: flex;
 }
-.row > * {
-  width: 100%;
-  height: 100%;
-}
+
 .align-center {
   align-items: center;
 }
@@ -94,6 +88,11 @@ th {
   border-radius: 8px;
   position: relative;
   border: solid 1px grey;
+  cursor: pointer;
+}
+
+.card * {
+  pointer-events: none;
 }
 
 .card .label {
@@ -141,6 +140,10 @@ th {
   background-color: yellow;
 }
 
+.card-black {
+  background-color: black;
+}
+
 .card .label span {
   font-size: 30px;
 }
@@ -155,4 +158,8 @@ th {
 }
 .card-yellow .label span {
   color: yellow;
+}
+
+.card-black .label span {
+  color: black;
 }

@@ -9,6 +9,7 @@ const gameID = getGameID();
 const userID = getUserID();
 
 const messageDiv = document.querySelector("#chat #messages");
+const playCardDiv = document.querySelector("#play-card");
 
 io.on(
   CHAT_MESSAGE_RECEIVED + `:${gameID}`,
@@ -32,11 +33,15 @@ io.on(
   }
 );
 
-io.on(`deal:${gameID}:${userID}`, ({ hands }) => {
+io.on(`deal:${gameID}:${userID}`, ({ hand }) => {
   const cardsDiv = document.querySelector("#cards");
 
-  for (const { value, color } of hands) {
-    const card = createCard(value, color);
-    cardsDiv.append(card);
+  for (const card of hand) {
+    cardsDiv.append(createCard(card));
   }
+});
+
+io.on(`game-state:${gameID}`, ({ play_card }) => {
+  playCardDiv.innerHTML = "";
+  playCardDiv.appendChild(createCard(play_card));
 });

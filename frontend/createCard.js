@@ -1,4 +1,4 @@
-module.exports = (value, color) => {
+module.exports = ({ value, color, id }) => {
   const img = document.createElement("img");
   const div = document.createElement("div");
   const span = document.createElement("span");
@@ -22,6 +22,7 @@ module.exports = (value, color) => {
 
   img.setAttribute("alt", "card");
   img.setAttribute("src", "/images/card.png");
+  card.setAttribute("data-card-id", id);
 
   label.append(center);
   card.append(top, label, img, bottom);
