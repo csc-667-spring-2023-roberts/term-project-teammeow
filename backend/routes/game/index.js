@@ -9,7 +9,8 @@ router.get("/:id", async (req, res) => {
   const userJoined = await Games.isJoined(gameID, userID);
 
   if (userJoined) {
-    res.render("game", { title: "Game" });
+    const { created_by } = await Games.getCreatedBy(gameID);
+    res.render("game", { created_by, title: "Game" });
   } else {
     res.redirect("/lobby");
   }

@@ -6,9 +6,11 @@
     <div class="col">
       <%- include('partials/navigation') %>
     </div>
-    <div class="col justify-center">
-      <button id='start-game-btn' type="button">Start</button>
-    </div>
+    <% if(locals.user.id == created_by) { %>
+      <div class="col justify-center">
+        <button id='start-game-btn' type="button">Start</button>
+      </div>
+    <% } %>
 
     <div id="play-card">
 
