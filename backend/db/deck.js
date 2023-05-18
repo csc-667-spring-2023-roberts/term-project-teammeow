@@ -61,6 +61,23 @@ class Deck {
     const playCard = await this.getPlayCard(gameID);
     return { user_id: userID, game_id: gameID, hand, playCard };
   };
+
+  static getCard = async (cardID) =>
+    db.one(
+      `
+  SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
+  FROM game_deck 
+  INNER JOIN canonical_cards 
+  ON game_deck.card_id = canonical_cards.id 
+  WHERE game_deck.id = $1`,
+      [cardID]
+    );
+
+  static updateCard = async (cardID, userID) =>
+    db.one(`UPDATE game_deck SET user_id = $1 where id = $2 RETURNING *`, [
+      userID,
+      cardID,
+    ]);
 }
 
 module.exports = Deck;

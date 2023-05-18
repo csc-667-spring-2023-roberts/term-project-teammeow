@@ -85,31 +85,47 @@ router.post("/start/:id", async (req, res) => {
 
 router.post("/move/:id", async (req, res) => {
   const io = req.app.get("io");
-  const { id: cardID } = req.body;
+  const { cardID } = req.body;
   const { id: gameID } = req.params;
-  const { id: userID } = req.session.user;
-
+  // const { id: userID } = req.session.user;
+  const userID = 1;
+  console.log("cardID", cardID);
   // before sending socket data, check if the turn is this user's (userID)
   const isUsersTurn = true;
-
-  if (isUsersTurn) {
-    io.emit(`game-state:${gameID}`, {
-      play_card: {
-        id: 1, // cardID
-        value: 2, // card value
-        color: "black", // card color
-      },
-      hands: [
-        {
-          id: 1, // userID
-          hand: 6, // # of cards in his hand
-        },
-        { id: 2, hand: 7 },
-      ],
-    });
+  if (!isUsersTurn) {
+    res.status(405).json({ message: "not your turn" });
   }
-
-  res.status(200).json({ message: "Success!" });
+  try {
+    const playedCard = await Deck.getCard(cardID);
+    const playCard = await Deck.getPlayCard(gameID);
+    console.log("playedCard ", playedCard);
+    console.log("playCard ", playCard);
+    console.log("HELLO");
+    //valid move
+    if (
+      playCard.value == playedCard.value ||
+      playCard.color == playedCard.color ||
+      playedCard.color == "black"
+    ) {
+      const oldPlayCard = await Deck.updateCard(playCard.id, -1);
+      console.log("updatePLayCard");
+      const newPlayCard = await Deck.updateCard(playedCard.id, -2);
+      console.log("updatePLayedCard");
+      const hands = await Deck.getHand(gameID, userID);
+      console.log("getHand");
+      const play_card = await Deck.getPlayCard(gameID);
+      console.log("getPLayCard");
+      io.emit(`game-state:${gameID}`, {
+        play_card,
+        hands,
+      });
+      res.status(200).json({ message: "Success!" });
+    } else {
+      res.status(405).json({ message: "invalid move" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = router;
