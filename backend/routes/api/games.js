@@ -87,9 +87,8 @@ router.post("/move/:id", async (req, res) => {
   const io = req.app.get("io");
   const { cardID } = req.body;
   const { id: gameID } = req.params;
-  // const { id: userID } = req.session.user;
-  const userID = 1;
-  console.log("cardID", cardID);
+  const { id: userID } = req.session.user;
+  // const userID = 1;
   // before sending socket data, check if the turn is this user's (userID)
   const isUsersTurn = true;
   if (!isUsersTurn) {
@@ -98,9 +97,6 @@ router.post("/move/:id", async (req, res) => {
   try {
     const playedCard = await Deck.getCard(cardID);
     const playCard = await Deck.getPlayCard(gameID);
-    console.log("playedCard ", playedCard);
-    console.log("playCard ", playCard);
-    console.log("HELLO");
     //valid move
     if (
       playCard.value == playedCard.value ||
@@ -108,13 +104,9 @@ router.post("/move/:id", async (req, res) => {
       playedCard.color == "black"
     ) {
       const oldPlayCard = await Deck.updateCard(playCard.id, -1);
-      console.log("updatePLayCard");
       const newPlayCard = await Deck.updateCard(playedCard.id, -2);
-      console.log("updatePLayedCard");
       const hands = await Deck.getHand(gameID, userID);
-      console.log("getHand");
       const play_card = await Deck.getPlayCard(gameID);
-      console.log("getPLayCard");
       io.emit(`game-state:${gameID}`, {
         play_card,
         hands,
