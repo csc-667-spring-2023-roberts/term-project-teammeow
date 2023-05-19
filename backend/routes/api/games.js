@@ -14,6 +14,7 @@ router.post("/create", async (req, res) => {
 
     res.redirect(`/game/${game.id}`);
   } catch (err) {
+    console.log(err);
     res.redirect("/lobby");
   }
 });
