@@ -1,12 +1,5 @@
 notes on this project
 
-canonical_cards table:
-10 - reverse
-11 - skip
-12 - +2
-13 - wild
-14 - +4
-
 games table:
 play_direction:
 true = ascending

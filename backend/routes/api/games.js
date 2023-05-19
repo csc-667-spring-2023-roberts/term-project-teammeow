@@ -86,7 +86,7 @@ router.post("/start/:id", async (req, res) => {
 
 router.post("/move/:id", async (req, res) => {
   const io = req.app.get("io");
-  const { cardID } = req.body;
+  const { id: cardID } = req.body;
   const { id: gameID } = req.params;
   const { id: userID } = req.session.user;
   // const userID = 1;
