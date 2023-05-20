@@ -132,12 +132,29 @@ router.post("/move/:id", async (req, res) => {
         hands,
       });
       let nextPlayerJoinOrder = currentPlayer.join_order;
+      let playerToPickUp;
       if (playDir) {
         //ascending order
         //we are at the highest join order, next player is join order 1
         if (currentPlayer.join_order == gameData.players) {
           nextPlayerJoinOrder = 1;
         } else {
+          nextPlayerJoinOrder++;
+        }
+        if (newPlayCardData.value == "+2") {
+          playerToPickUp = await Users.getUserByJoinOrder(
+            gameID,
+            nextPlayerJoinOrder
+          );
+          await Deck.dealCards(gameID, playerToPickUp.user_id, 2);
+          nextPlayerJoinOrder++;
+        }
+        if (newPlayCardData.value == "+4") {
+          playerToPickUp = await Users.getUserByJoinOrder(
+            gameID,
+            nextPlayerJoinOrder
+          );
+          await Deck.dealCards(gameID, playerToPickUp.user_id, 4);
           nextPlayerJoinOrder++;
         }
         if (newPlayCardData.value == "skip") {
@@ -151,11 +168,30 @@ router.post("/move/:id", async (req, res) => {
         } else {
           nextPlayerJoinOrder--;
         }
+        if (newPlayCardData.value == "+2") {
+          playerToPickUp = await Users.getUserByJoinOrder(
+            gameID,
+            nextPlayerJoinOrder
+          );
+          await Deck.dealCards(gameID, playerToPickUp.user_id, 2);
+          nextPlayerJoinOrder--;
+        }
+        if (newPlayCardData.value == "+4") {
+          playerToPickUp = await Users.getUserByJoinOrder(
+            gameID,
+            nextPlayerJoinOrder
+          );
+          await Deck.dealCards(gameID, playerToPickUp.user_id, 4);
+          nextPlayerJoinOrder--;
+        }
         if (newPlayCardData.value == "skip") {
           nextPlayerJoinOrder--;
         }
       }
-      nextPlayer = await Users.getUserByJoinOrder(gameID, nextPlayerJoinOrder);
+      const nextPlayer = await Users.getUserByJoinOrder(
+        gameID,
+        nextPlayerJoinOrder
+      );
       console.log("nextPLayer ", nextPlayer);
       await Games.setNextPlayer(gameID, nextPlayer.user_id);
       res.status(200).json({ message: "Success!" });

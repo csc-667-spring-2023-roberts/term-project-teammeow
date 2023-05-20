@@ -38,6 +38,19 @@ class Deck {
     }
   };
 
+  static dealCards = async (gameID, userID, numCards) => {
+    for (let i = 0; i < numCards; i++) {
+      var { id: cardID } = await db.one(
+        "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
+        [gameID]
+      );
+      db.none("UPDATE game_deck SET user_id = $1 WHERE id = $2", [
+        userID,
+        cardID,
+      ]);
+    }
+  };
+
   static getHand = (gameID, userID) =>
     db.many(
       `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
