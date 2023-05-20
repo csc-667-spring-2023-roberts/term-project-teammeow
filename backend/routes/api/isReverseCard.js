@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
 
   try {
     const playCard = await Deck.getPlayCard(gameID);
-
+    const { play_direction } = req.game;
     if ((playCard.value = "reverse")) {
       await Games.setPlayDirection(gameID, !play_direction);
     }
