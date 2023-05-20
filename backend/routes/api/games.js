@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Games, Deck, Users } = require("../../db");
+const { Games, Deck } = require("../../db");
 const isUsersTurn = require("./isUsersTurn");
 const isValidMove = require("./isValidMove");
 const nextPlayer = require("./nextPlayer");
@@ -108,6 +108,16 @@ router.post(
       console.log(err);
     }
   },
+  async (req, res, next) => {
+    // TODO: check the drawn card is valid to play
+    let isValidCard = false;
+
+    if (!isValidCard) {
+      next();
+    } else {
+      res.status(200).json({ message: "valid card drawn, want to play?" });
+    }
+  },
   async (req, res) => {
     const { id: gameID } = req.params;
     const { join_order } = req.nextPlayer;
@@ -190,5 +200,12 @@ router.post(
     }
   }
 );
+
+router.post("/pass-turn/:id", isUsersTurn, async (req, res, next) => {
+  const { id: gameID } = req.params;
+
+  // TODO: this API receives a request to pass the turn
+  // when a valid card drawn, but not want to play
+});
 
 module.exports = router;
