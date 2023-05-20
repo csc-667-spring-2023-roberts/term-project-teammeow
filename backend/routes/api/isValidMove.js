@@ -14,8 +14,8 @@ module.exports = async (req, res, next) => {
       playCard.color == playedCard.color ||
       playedCard.color == "black"
     ) {
-      const oldPlayCard = await Deck.updateCard(playCard.id, -1);
-      const newPlayCard = await Deck.updateCard(playedCard.id, -2);
+      await Deck.updateCard(playCard.id, -1);
+      await Deck.updateCard(playedCard.id, -2);
 
       next();
     } else {

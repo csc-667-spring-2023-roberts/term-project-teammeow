@@ -45,10 +45,21 @@ class Deck {
         [gameID]
       );
       db.any(
-        "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *",
+        "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2",
         [userID, cardID]
       );
     }
+  };
+
+  static dealCard = async (gameID, userID) => {
+    var { id: cardID } = await db.one(
+      "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
+      [gameID]
+    );
+    return await db.one(
+      "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *",
+      [userID, cardID]
+    );
   };
 
   static getHand = (gameID, userID) =>

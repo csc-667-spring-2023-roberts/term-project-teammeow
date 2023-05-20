@@ -99,8 +99,7 @@ router.post(
     const { id: userID } = req.session.user;
 
     try {
-      const drawnCard = (await Deck.dealCards(gameID, userID, 1))[0];
-      req.drawnCard = drawnCard;
+      req.drawnCard = await Deck.dealCard(gameID, userID);
 
       next();
     } catch (err) {
@@ -108,27 +107,24 @@ router.post(
     }
   },
   async (req, res, next) => {
+    const io = req.app.get("io");
     const { id: gameID } = req.params;
+    const { id: userID } = req.session.user;
     // TODO: check the drawn card is valid to play
-    console.log(req.drawnCard);
     try {
-      const playedCard = await Deck.getCard(cardID);
+      const drawnCard = await Deck.getCard(req.drawnCard.id);
       const playCard = await Deck.getPlayCard(gameID);
       //valid card, play it
       if (
-        playCard.value == playedCard.value ||
-        playCard.color == playedCard.color ||
-        playedCard.color == "black"
+        playCard.value == drawnCard.value ||
+        playCard.color == drawnCard.color ||
+        drawnCard.color == "black"
       ) {
-        const oldPlayCard = await Deck.updateCard(playCard.id, -1);
-        const newPlayCard = await Deck.updateCard(playedCard.id, -2);
-
-        next();
-      } else {
-        res.status(405).json({ message: "invalid move" });
+        await Deck.updateCard(playCard.id, -1);
+        await Deck.updateCard(drawnCard.id, -2);
       }
 
-      //emit stateevenif its not a vaid card
+      //emit state evenif its not a valid card
       const hand = await Deck.getHand(gameID, userID);
       io.emit(`deal:${gameID}:${userID}`, { hand });
       next();
