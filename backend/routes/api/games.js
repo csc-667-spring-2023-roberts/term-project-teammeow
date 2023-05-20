@@ -53,10 +53,10 @@ router.post("/start/:id", async (req, res) => {
   const { id: gameID } = req.params;
 
   try {
-    // await Deck.create(gameID);
+    await Deck.create(gameID);
     const players = await Games.getPlayers(gameID);
     players.forEach(async ({ user_id: userID }) => {
-      // await Deck.dealHand(gameID, userID);
+      await Deck.dealHand(gameID, userID);
       const hand = await Deck.getHand(gameID, userID);
 
       io.emit(`deal:${gameID}:${userID}`, { hand });

@@ -53,9 +53,8 @@ class Games {
     db.many("SELECT * FROM game_players WHERE game_id = $1", [gameID]);
 
   static setNextPlayer = (gameID, joinOrder) =>
-    db.one(
-      `
-      UPDATE games SET current_player = (SELECT user_id FROM game_players WHERE join_order = $2) WHERE id = $1`,
+    db.none(
+      `UPDATE games SET current_player = (SELECT user_id FROM game_players WHERE join_order = $2) WHERE id = $1`,
       [gameID, joinOrder]
     );
 
