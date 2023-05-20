@@ -84,6 +84,24 @@ router.post("/start/:id", async (req, res) => {
   }
 });
 
+router.post("/draw/:id", async (req, res) => {
+  const io = req.app.get("io");
+  const { id: gameID } = req.params;
+  const { id: userID } = req.session.user;
+  try {
+    await Deck.dealCards(gameID, userID, 1);
+    const hands = await Deck.getHand(gameID, userID);
+    const play_card = await Deck.getPlayCard(gameID);
+    io.emit(`game-state:${gameID}`, {
+      play_card,
+      hands,
+    });
+    res.status(200).json({ message: "Success!" });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 router.post("/move/:id", async (req, res) => {
   const io = req.app.get("io");
   const { id: cardID } = req.body;
