@@ -54,7 +54,7 @@ class Games {
 
   static setNextPlayer = (gameID, joinOrder) =>
     db.none(
-      `UPDATE games SET current_player = (SELECT user_id FROM game_players WHERE join_order = $2) WHERE id = $1`,
+      `UPDATE games SET current_player = (SELECT user_id FROM game_players WHERE join_order = $2 and game_id = $1) WHERE id = $1`,
       [gameID, joinOrder]
     );
 
