@@ -65,6 +65,11 @@ exports.up = (pgm) => {
       notNull: true,
       default: true,
     },
+    current_player: {
+      type: "integer",
+      references: "users",
+      notNull: true,
+    },
   });
   pgm.addConstraint("games", "room_title_unq", "UNIQUE(room_title)");
   pgm.addConstraint("games", "players_must_be_>=_2", "CHECK (players>=2)");
