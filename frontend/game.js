@@ -1,6 +1,7 @@
 import getGameID from "./getGameId";
 
 const cards = document.querySelector("#cards");
+const drawCard = document.querySelector("#draw-card");
 const startBtn = document.querySelector("#start-game-btn");
 
 startBtn &&
@@ -21,5 +22,15 @@ cards &&
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
+    });
+  });
+
+drawCard &&
+  drawCard.addEventListener("click", (e) => {
+    const gameID = getGameID();
+
+    fetch(`/api/game/draw/${gameID}`, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
     });
   });

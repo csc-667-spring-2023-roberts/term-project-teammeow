@@ -35,10 +35,16 @@ io.on(
 
 io.on(`deal:${gameID}:${userID}`, ({ hand }) => {
   const cardsDiv = document.querySelector("#cards");
+  const drawCardDiv = document.querySelector("#draw-card");
+
+  cardsDiv.innerHTML = "";
+  drawCardDiv.innerHTML = "";
 
   for (const card of hand) {
     cardsDiv.append(createCard(card));
   }
+
+  drawCardDiv.append(createCard({ color: "black", value: "uno", id: 0 }));
 });
 
 io.on(`game-state:${gameID}`, ({ play_card }) => {
