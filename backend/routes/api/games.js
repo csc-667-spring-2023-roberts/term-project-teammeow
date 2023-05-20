@@ -89,52 +89,38 @@ router.post("/start/:id", async (req, res) => {
   }
 });
 
-router.post("/draw/:id", async (req, res) => {
-  const io = req.app.get("io");
-  const { id: gameID } = req.params;
-  // const { id: userID } = req.session.user;
-  const userID = 1;
-  try {
-    const gameData = await Games.getGameByID(gameID);
-    const currentPlayerID = gameData.current_player;
-    const currentPlayer = await Users.getUserByID(gameID, currentPlayerID);
-    const playDir = gameData.play_direction;
-    await Deck.dealCards(gameID, userID, 1);
-    const hands = await Deck.getHand(gameID, userID);
-    const play_card = await Deck.getPlayCard(gameID);
-    io.emit(`game-state:${gameID}`, {
-      play_card,
-      hands,
-    });
-    let nextPlayerJoinOrder = currentPlayer.join_order;
-    if (playDir) {
-      //ascending order
-      //we are at the highest join order, next player is join order 1
-      if (currentPlayer.join_order >= gameData.players) {
-        nextPlayerJoinOrder = 1;
-      } else {
-        nextPlayerJoinOrder++;
-      }
-    } else {
-      //descending order
-      // we are at join_order 1 next player is game.players (max players)
-      if (currentPlayer.join_order == 1) {
-        nextPlayerJoinOrder = gameData.players;
-      } else {
-        nextPlayerJoinOrder--;
-      }
+router.post(
+  "/draw/:id",
+  isUsersTurn,
+  nextPlayer,
+  async (req, res, next) => {
+    const io = req.app.get("io");
+    const { id: gameID } = req.params;
+    const { id: userID } = req.session.user;
+
+    try {
+      await Deck.dealCards(gameID, userID, 1);
+      const hand = await Deck.getHand(gameID, userID);
+      io.emit(`deal:${gameID}:${userID}`, { hand });
+
+      next();
+    } catch (err) {
+      console.log(err);
     }
-    const nextPlayer = await Users.getUserByJoinOrder(
-      gameID,
-      nextPlayerJoinOrder
-    );
-    console.log("nextPLayer ", nextPlayer);
-    await Games.setNextPlayer(gameID, nextPlayer.user_id);
-    res.status(200).json({ message: "Success!" });
-  } catch (err) {
-    console.log(err);
+  },
+  async (req, res) => {
+    const { id: gameID } = req.params;
+    const { join_order } = req.nextPlayer;
+
+    try {
+      await Games.setNextPlayer(gameID, join_order);
+
+      res.status(200).json({ message: "Success!" });
+    } catch (err) {
+      console.log(err);
+    }
   }
-});
+);
 
 router.post(
   "/move/:id",
