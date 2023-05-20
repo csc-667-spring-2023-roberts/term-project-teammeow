@@ -1,10 +1,13 @@
-const isAuthenticated = (req, res, next) => {
-  const { user, id } = req.session;
+const { Users } = require("../db");
 
-  if (user != undefined && user.id != undefined) {
-    res.locals = { user, session: id };
+const isAuthenticated = async (req, res, next) => {
+  const sUser = req.session.user;
+
+  try {
+    const user = await Users.getUserByID(sUser.id);
+    res.locals.user = user;
     next();
-  } else {
+  } catch (err) {
     res.redirect("/auth/login");
   }
 };
