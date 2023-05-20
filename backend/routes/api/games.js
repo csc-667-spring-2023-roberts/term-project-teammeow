@@ -161,6 +161,7 @@ router.post(
   isReverseCard,
   nextPlayer,
   async (req, res, next) => {
+    const io = req.app.get("io");
     const { id: gameID } = req.params;
     const { players, play_direction } = req.game;
     const nextPlayer = req.nextPlayer;
@@ -170,8 +171,12 @@ router.post(
 
       if (play_card.value == "+2") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 2);
+        const hand = await Deck.getHand(nextPlayer.user_id);
+        io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
       } else if (play_card.value == "+4") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 4);
+        const hand = await Deck.getHand(nextPlayer.user_id);
+        io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
       }
 
       let nextPlayerJoinOrder = nextPlayer.join_order;
