@@ -56,6 +56,12 @@ class Games {
       userID,
       gameID,
     ]);
+
+  static setPlayDirection = (gameID, playDirection) =>
+    db.one("UPDATE games SET play_direction = $1 WHERE id = $2 RETURNING *", [
+      gameID,
+      playDirection,
+    ]);
 }
 
 module.exports = Games;

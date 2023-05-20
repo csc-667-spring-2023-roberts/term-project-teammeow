@@ -120,31 +120,34 @@ router.post("/move/:id", async (req, res) => {
     ) {
       const oldPlayCard = await Deck.updateCard(playCard.id, -1);
       const newPlayCard = await Deck.updateCard(playedCard.id, -2);
+      const newPlayCardData = await Deck.getCard(newPlayCard.card_id);
+      console.log(newPlayCardData);
+      if (newPlayCardData.value == "reverse") {
+        await Games.setPlayDirection(gameID, !gameData.play_direction);
+      }
       const hands = await Deck.getHand(gameID, userID);
       const play_card = await Deck.getPlayCard(gameID);
       io.emit(`game-state:${gameID}`, {
         play_card,
         hands,
       });
+      let nextPlayerJoinOrder = currentPlayer.join_order;
+      let nextPlayer;
       if (playDir) {
         //ascending order
         //we are at the highest join order, next player is join order 1
-        let nextPlayerJoinOrder = currentPlayer.join_order;
-        let nextPlayer;
         if (currentPlayer.join_order == gameData.players) {
           nextPlayerJoinOrder = 1;
           nextPlayer = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
           );
-          await Games.setNextPlayer(gameID, nextPlayer.user_id);
         } else {
           nextPlayerJoinOrder++;
           nextPlayer = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
           );
-          await Games.setNextPlayer(gameID, nextPlayer.user_id);
         }
       } else {
         //descending order
@@ -155,16 +158,16 @@ router.post("/move/:id", async (req, res) => {
             gameID,
             nextPlayerJoinOrder
           );
-          await Games.setNextPlayer(gameID, nextPlayer.user_id);
         } else {
           nextPlayerJoinOrder--;
           nextPlayer = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
           );
-          await Games.setNextPlayer(gameID, nextPlayer.user_id);
         }
       }
+      console.log("nextPLayer ", nextPlayer);
+      await Games.setNextPlayer(gameID, nextPlayer.user_id);
       res.status(200).json({ message: "Success!" });
     } else {
       console.log("invalid move");
