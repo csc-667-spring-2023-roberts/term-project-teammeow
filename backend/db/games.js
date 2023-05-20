@@ -2,8 +2,8 @@ const db = require("./connection");
 class Games {
   static create = (createdBy, maxPlayers, roomTitle) =>
     db.one(
-      "INSERT INTO games(created_by, players, players_joined, room_title, current_player) VALUES($1, $2, $3, $4, $1) RETURNING *",
-      [createdBy, maxPlayers, 1, roomTitle]
+      "INSERT INTO games(created_by, players, room_title, current_player) VALUES($1, $2, $3, $1) RETURNING *",
+      [createdBy, maxPlayers, roomTitle]
     );
 
   static getGameByTitle = (roomTitle) =>
@@ -59,8 +59,8 @@ class Games {
 
   static setPlayDirection = (gameID, playDirection) =>
     db.one("UPDATE games SET play_direction = $1 WHERE id = $2 RETURNING *", [
-      gameID,
       playDirection,
+      gameID,
     ]);
 }
 

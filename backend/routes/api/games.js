@@ -58,19 +58,21 @@ router.post("/start/:id", async (req, res) => {
 
       io.emit(`deal:${gameID}:${userID}`, { hand });
     });
-
+    const play_card = await Deck.getPlayCard(gameID);
     // emit how many cards each user have, and the play_card
     // following is the format:
+    // play_card: {
+    //   id: 1, // cardID
+    //   value: 2, // card value
+    //   color: "green", // card color
+    // },
+    console.log("play_card ", play_card);
     const state = {
-      play_card: {
-        id: 1, // cardID
-        value: 2, // card value
-        color: "green", // card color
-      },
+      play_card,
       hands: [
         {
           id: 1, // userID
-          hand: 6, // # of cards in his hand
+          hand: 7, // # of cards in his hand
         },
         { id: 2, hand: 7 },
       ],
