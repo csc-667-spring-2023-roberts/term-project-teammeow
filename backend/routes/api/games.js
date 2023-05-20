@@ -132,41 +132,45 @@ router.post(
     const { players, play_direction } = req.game;
     const nextPlayer = req.nextPlayer;
 
-    const play_card = await Deck.getPlayCard(gameID);
+    try {
+      const play_card = await Deck.getPlayCard(gameID);
 
-    if (play_card.value == "reverse") {
-      await Games.setPlayDirection(gameID, !play_direction);
-    } else if (play_card.value == "+2") {
-      await Deck.dealCards(gameID, nextPlayer.user_id, 2);
-    } else if (play_card.value == "+4") {
-      await Deck.dealCards(gameID, nextPlayer.user_id, 4);
-    }
+      if (play_card.value == "reverse") {
+        await Games.setPlayDirection(gameID, !play_direction);
+      } else if (play_card.value == "+2") {
+        await Deck.dealCards(gameID, nextPlayer.user_id, 2);
+      } else if (play_card.value == "+4") {
+        await Deck.dealCards(gameID, nextPlayer.user_id, 4);
+      }
 
-    let nextPlayerJoinOrder = nextPlayer.join_order;
+      let nextPlayerJoinOrder = nextPlayer.join_order;
 
-    if (
-      play_card.value == "skip" ||
-      play_card.value == "+2" ||
-      play_card.value == "+4"
-    ) {
-      if (play_direction) {
-        if (nextPlayerJoinOrder >= players) {
-          nextPlayerJoinOrder = 1;
+      if (
+        play_card.value == "skip" ||
+        play_card.value == "+2" ||
+        play_card.value == "+4"
+      ) {
+        if (play_direction) {
+          if (nextPlayerJoinOrder >= players) {
+            nextPlayerJoinOrder = 1;
+          } else {
+            nextPlayerJoinOrder++;
+          }
         } else {
-          nextPlayerJoinOrder++;
-        }
-      } else {
-        if (nextPlayerJoinOrder <= 1) {
-          nextPlayerJoinOrder = players;
-        } else {
-          nextPlayerJoinOrder--;
+          if (nextPlayerJoinOrder <= 1) {
+            nextPlayerJoinOrder = players;
+          } else {
+            nextPlayerJoinOrder--;
+          }
         }
       }
+
+      await Games.setNextPlayer(gameID, nextPlayerJoinOrder);
+
+      next();
+    } catch (err) {
+      console.log(err);
     }
-
-    await Games.setNextPlayer(gameID, nextPlayerJoinOrder);
-
-    next();
   },
   async (req, res) => {
     const io = req.app.get("io");
@@ -175,11 +179,10 @@ router.post(
 
     try {
       const hand = await Deck.getHand(gameID, userID);
+      const play_card = await Deck.getPlayCard(gameID);
 
       io.emit(`deal:${gameID}:${userID}`, { hand });
-      io.emit(`game-state:${gameID}`, {
-        play_card,
-      });
+      io.emit(`game-state:${gameID}`, { play_card });
 
       res.status(200).json({ message: "Success!" });
     } catch (err) {
