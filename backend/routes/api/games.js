@@ -132,40 +132,30 @@ router.post("/move/:id", async (req, res) => {
         hands,
       });
       let nextPlayerJoinOrder = currentPlayer.join_order;
-      let nextPlayer;
       if (playDir) {
         //ascending order
         //we are at the highest join order, next player is join order 1
         if (currentPlayer.join_order == gameData.players) {
           nextPlayerJoinOrder = 1;
-          nextPlayer = await Users.getUserByJoinOrder(
-            gameID,
-            nextPlayerJoinOrder
-          );
         } else {
           nextPlayerJoinOrder++;
-          nextPlayer = await Users.getUserByJoinOrder(
-            gameID,
-            nextPlayerJoinOrder
-          );
+        }
+        if (newPlayCardData.value == "skip") {
+          nextPlayerJoinOrder++;
         }
       } else {
         //descending order
         // we are at join_order 1 next player is game.players (max players)
         if (currentPlayer.join_order == 1) {
           nextPlayerJoinOrder = gameData.players;
-          nextPlayer = await Users.getUserByJoinOrder(
-            gameID,
-            nextPlayerJoinOrder
-          );
         } else {
           nextPlayerJoinOrder--;
-          nextPlayer = await Users.getUserByJoinOrder(
-            gameID,
-            nextPlayerJoinOrder
-          );
+        }
+        if (newPlayCardData.value == "skip") {
+          nextPlayerJoinOrder--;
         }
       }
+      nextPlayer = await Users.getUserByJoinOrder(gameID, nextPlayerJoinOrder);
       console.log("nextPLayer ", nextPlayer);
       await Games.setNextPlayer(gameID, nextPlayer.user_id);
       res.status(200).json({ message: "Success!" });
