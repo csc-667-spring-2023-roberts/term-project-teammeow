@@ -72,6 +72,14 @@ class Deck {
       [gameID, userID]
     );
 
+  static getNumCardsInHand = async (gameID, userID) =>
+    await db.many(
+      `SELECT  COUNT(*)
+      FROM game_deck 
+      WHERE game_id = $1 AND user_id = $2 `,
+      [gameID, userID]
+    );
+
   static getPlayCard = (gameID) =>
     db.one(
       `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 

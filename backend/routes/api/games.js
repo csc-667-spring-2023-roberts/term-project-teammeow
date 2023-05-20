@@ -70,16 +70,14 @@ router.post("/start/:id", async (req, res) => {
     //   value: 2, // card value
     //   color: "green", // card color
     // },
+    const hands = players.map(async ({ user_id: userID }) => {
+      const numCards = await Deck.getNumCardsInHand(gameID, userID);
+      return { id: userID, hand: numCards };
+    });
     console.log("play_card ", play_card);
     const state = {
       play_card,
-      hands: [
-        {
-          id: 1, // userID
-          hand: 7, // # of cards in his hand
-        },
-        { id: 2, hand: 7 },
-      ],
+      hands,
     };
 
     io.emit(`game-state:${gameID}`, state);
@@ -134,11 +132,19 @@ router.post(
     }
   },
   async (req, res) => {
+    const io = req.app.get("io");
     const { id: gameID } = req.params;
     const { join_order } = req.nextPlayer;
 
     try {
       await Games.setNextPlayer(gameID, join_order);
+      const play_card = await Deck.getPlayCard(gameID);
+      const players = await Games.getPlayers(gameID);
+      const hands = players.map(async ({ user_id: userID }) => {
+        const numCards = await Deck.getNumCardsInHand(gameID, userID);
+        return { id: userID, hand: numCards };
+      });
+      io.emit(`game-state:${gameID}`, { play_card, hands });
 
       res.status(200).json({ message: "Success!" });
     } catch (err) {
@@ -205,9 +211,13 @@ router.post(
     try {
       const hand = await Deck.getHand(gameID, userID);
       const play_card = await Deck.getPlayCard(gameID);
-
+      const players = await Games.getPlayers(gameID);
+      const hands = players.map(async ({ user_id: userID }) => {
+        const numCards = await Deck.getNumCardsInHand(gameID, userID);
+        return { id: userID, hand: numCards };
+      });
       io.emit(`deal:${gameID}:${userID}`, { hand });
-      io.emit(`game-state:${gameID}`, { play_card });
+      io.emit(`game-state:${gameID}`, { play_card, hands });
 
       res.status(200).json({ message: "Success!" });
     } catch (err) {
