@@ -31,7 +31,7 @@ class Deck {
         "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
         [gameID]
       );
-      db.none(
+      await db.none(
         "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2",
         [userID, cardID]
       );
@@ -44,7 +44,7 @@ class Deck {
         "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
         [gameID]
       );
-      db.any(
+      await db.any(
         "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2",
         [userID, cardID]
       );
@@ -62,8 +62,8 @@ class Deck {
     );
   };
 
-  static getHand = (gameID, userID) =>
-    db.many(
+  static getHand = async (gameID, userID) =>
+    await db.many(
       `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
       FROM game_deck 
       INNER JOIN canonical_cards 
@@ -71,6 +71,7 @@ class Deck {
       WHERE game_id = $1 AND user_id = $2 `,
       [gameID, userID]
     );
+
   static getPlayCard = (gameID) =>
     db.one(
       `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
