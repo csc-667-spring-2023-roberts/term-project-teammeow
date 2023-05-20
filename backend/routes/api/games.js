@@ -5,6 +5,7 @@ const { Games, Deck } = require("../../db");
 const isUsersTurn = require("./isUsersTurn");
 const isValidMove = require("./isValidMove");
 const nextPlayer = require("./nextPlayer");
+const isReverseCard = require("./isReverseCard");
 
 router.post("/create", async (req, res) => {
   const { room, players } = req.body;
@@ -157,6 +158,7 @@ router.post(
   "/move/:id",
   isUsersTurn,
   isValidMove,
+  isReverseCard,
   nextPlayer,
   async (req, res, next) => {
     const { id: gameID } = req.params;
@@ -166,9 +168,7 @@ router.post(
     try {
       const play_card = await Deck.getPlayCard(gameID);
 
-      if (play_card.value == "reverse") {
-        await Games.setPlayDirection(gameID, !play_direction);
-      } else if (play_card.value == "+2") {
+      if (play_card.value == "+2") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 2);
       } else if (play_card.value == "+4") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 4);
