@@ -169,14 +169,14 @@ router.post("/move/:id", async (req, res) => {
     ) {
       const oldPlayCard = await Deck.updateCard(playCard.id, -1);
       const newPlayCard = await Deck.updateCard(playedCard.id, -2);
-      const hands = await Deck.getHand(gameID, userID);
+      const hand = await Deck.getHand(gameID, userID);
       const play_card = await Deck.getPlayCard(gameID);
       if (play_card.value == "reverse") {
         await Games.setPlayDirection(gameID, !gameData.play_direction);
       }
+      io.emit(`deal:${gameID}:${userID}`, { hand });
       io.emit(`game-state:${gameID}`, {
         play_card,
-        hands,
       });
       let nextPlayerJoinOrder = currentPlayer.join_order;
       let playerToPickUp;
