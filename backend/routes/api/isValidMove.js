@@ -12,7 +12,8 @@ module.exports = async (req, res, next) => {
     if (
       playCard.value == playedCard.value ||
       playCard.color == playedCard.color ||
-      playedCard.color == "black"
+      playCard.value == "wild" ||
+      playedCard.value == "wild"
     ) {
       await Deck.updateCard(playCard.id, -1);
       await Deck.updateCard(playedCard.id, -2);
