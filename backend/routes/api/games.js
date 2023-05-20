@@ -120,13 +120,11 @@ router.post("/move/:id", async (req, res) => {
     ) {
       const oldPlayCard = await Deck.updateCard(playCard.id, -1);
       const newPlayCard = await Deck.updateCard(playedCard.id, -2);
-      const newPlayCardData = await Deck.getCard(newPlayCard.card_id);
-      console.log(newPlayCardData);
-      if (newPlayCardData.value == "reverse") {
-        await Games.setPlayDirection(gameID, !gameData.play_direction);
-      }
       const hands = await Deck.getHand(gameID, userID);
       const play_card = await Deck.getPlayCard(gameID);
+      if (play_card.value == "reverse") {
+        await Games.setPlayDirection(gameID, !gameData.play_direction);
+      }
       io.emit(`game-state:${gameID}`, {
         play_card,
         hands,
@@ -136,29 +134,35 @@ router.post("/move/:id", async (req, res) => {
       if (playDir) {
         //ascending order
         //we are at the highest join order, next player is join order 1
-        if (currentPlayer.join_order == gameData.players) {
+        if (currentPlayer.join_order >= gameData.players) {
           nextPlayerJoinOrder = 1;
         } else {
           nextPlayerJoinOrder++;
         }
-        if (newPlayCardData.value == "+2") {
+        if (play_card.value == "+2") {
           playerToPickUp = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
           );
           await Deck.dealCards(gameID, playerToPickUp.user_id, 2);
-          nextPlayerJoinOrder++;
         }
-        if (newPlayCardData.value == "+4") {
+        if (play_card.value == "+4") {
           playerToPickUp = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
           );
           await Deck.dealCards(gameID, playerToPickUp.user_id, 4);
-          nextPlayerJoinOrder++;
         }
-        if (newPlayCardData.value == "skip") {
-          nextPlayerJoinOrder++;
+        if (
+          play_card.value == "skip" ||
+          play_card.value == "+2" ||
+          play_card.value == "+4"
+        ) {
+          if (nextPlayerJoinOrder >= gameData.players) {
+            nextPlayerJoinOrder = 1;
+          } else {
+            nextPlayerJoinOrder++;
+          }
         }
       } else {
         //descending order
@@ -168,7 +172,7 @@ router.post("/move/:id", async (req, res) => {
         } else {
           nextPlayerJoinOrder--;
         }
-        if (newPlayCardData.value == "+2") {
+        if (play_card.value == "+2") {
           playerToPickUp = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
@@ -176,7 +180,7 @@ router.post("/move/:id", async (req, res) => {
           await Deck.dealCards(gameID, playerToPickUp.user_id, 2);
           nextPlayerJoinOrder--;
         }
-        if (newPlayCardData.value == "+4") {
+        if (play_card.value == "+4") {
           playerToPickUp = await Users.getUserByJoinOrder(
             gameID,
             nextPlayerJoinOrder
@@ -184,8 +188,16 @@ router.post("/move/:id", async (req, res) => {
           await Deck.dealCards(gameID, playerToPickUp.user_id, 4);
           nextPlayerJoinOrder--;
         }
-        if (newPlayCardData.value == "skip") {
-          nextPlayerJoinOrder--;
+        if (
+          play_card.value == "skip" ||
+          play_card.value == "+2" ||
+          play_card.value == "+4"
+        ) {
+          if (nextPlayerJoinOrder <= gameData.players) {
+            nextPlayerJoinOrder = gameData.players;
+          } else {
+            nextPlayerJoinOrder--;
+          }
         }
       }
       const nextPlayer = await Users.getUserByJoinOrder(
