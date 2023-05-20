@@ -31,10 +31,10 @@ class Deck {
         "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
         [gameID]
       );
-      db.none("UPDATE game_deck SET user_id = $1 WHERE id = $2", [
-        userID,
-        cardID,
-      ]);
+      db.none(
+        "UPDATE game_deck SET user_id = $1 AND updated_at = $3 WHERE id = $2",
+        [userID, cardID, Date.now()]
+      );
     }
   };
 
@@ -44,7 +44,7 @@ class Deck {
         "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
         [gameID]
       );
-      db.none("UPDATE game_deck SET user_id = $1 WHERE id = $2", [
+      db.any("UPDATE game_deck SET user_id = $1 WHERE id = $2 RETURNING *", [
         userID,
         cardID,
       ]);

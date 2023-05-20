@@ -114,6 +114,11 @@ exports.up = (pgm) => {
       references: "canonical_cards",
       notNull: true,
     },
+    updated_at: {
+      type: "timestamp",
+      notNull: true,
+      default: pgm.func("current_timestamp"),
+    },
   });
   pgm.sql(
     `INSERT INTO users(id, username, email, password) VALUES('-2', 'play','play', 'play' );`

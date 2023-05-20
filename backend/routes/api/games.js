@@ -99,9 +99,8 @@ router.post(
     const { id: userID } = req.session.user;
 
     try {
-      await Deck.dealCards(gameID, userID, 1);
-      const hand = await Deck.getHand(gameID, userID);
-      io.emit(`deal:${gameID}:${userID}`, { hand });
+      const drawnCard = (await Deck.dealCards(gameID, userID, 1))[0];
+      req.drawnCard = drawnCard;
 
       next();
     } catch (err) {
@@ -109,13 +108,32 @@ router.post(
     }
   },
   async (req, res, next) => {
+    const { id: gameID } = req.params;
     // TODO: check the drawn card is valid to play
-    let isValidCard = false;
+    console.log(req.drawnCard);
+    try {
+      const playedCard = await Deck.getCard(cardID);
+      const playCard = await Deck.getPlayCard(gameID);
+      //valid card, play it
+      if (
+        playCard.value == playedCard.value ||
+        playCard.color == playedCard.color ||
+        playedCard.color == "black"
+      ) {
+        const oldPlayCard = await Deck.updateCard(playCard.id, -1);
+        const newPlayCard = await Deck.updateCard(playedCard.id, -2);
 
-    if (!isValidCard) {
+        next();
+      } else {
+        res.status(405).json({ message: "invalid move" });
+      }
+
+      //emit stateevenif its not a vaid card
+      const hand = await Deck.getHand(gameID, userID);
+      io.emit(`deal:${gameID}:${userID}`, { hand });
       next();
-    } else {
-      res.status(200).json({ message: "valid card drawn, want to play?" });
+    } catch (err) {
+      console.log(err);
     }
   },
   async (req, res) => {
