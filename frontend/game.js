@@ -1,6 +1,6 @@
 import getGameID from "./getGameId";
 
-const cards = document.querySelector("#cards");
+const player = document.querySelector("#player");
 const drawCard = document.querySelector("#draw-card");
 const startBtn = document.querySelector("#start-game-btn");
 
@@ -13,8 +13,8 @@ startBtn &&
     );
   });
 
-cards &&
-  cards.addEventListener("click", (e) => {
+player &&
+  player.addEventListener("click", (e) => {
     const gameID = getGameID();
     const id = e.target.getAttribute("data-card-id");
 

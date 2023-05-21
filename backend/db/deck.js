@@ -64,10 +64,10 @@ class Deck {
   static getNumCardsInHand = async (gameID, userID) =>
     await db.many(
       `
-        SELECT gd.user_id, COUNT(gd.card_id) as hands FROM game_deck gd 
+        SELECT gd.user_id, COUNT(gd.card_id) as hands, gp.join_order FROM game_deck gd 
         INNER JOIN game_players gp ON gd.user_id = gp.user_id 
-        WHERE gd.game_id = $1 and gd.user_id <> $2 
-        GROUP BY gd.user_id
+        WHERE gd.game_id = $1
+        GROUP BY gd.user_id, gp.join_order
       `,
       [gameID, userID]
     );

@@ -60,11 +60,10 @@ router.post(
       await Deck.create(gameID);
       const players = await Games.getPlayers(gameID);
 
-      for (const { user_id: userID } of players) {
+      for (const { user_id: userID, join_order } of players) {
         await Deck.dealCards(gameID, userID, 7);
         const hand = await Deck.getHand(gameID, userID);
-
-        io.emit(`deal:${gameID}:${userID}`, { hand });
+        io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       }
       next();
     } catch (err) {
@@ -96,6 +95,8 @@ router.post(
     const { id: gameID } = req.params;
     const { id: userID } = req.session.user;
     // TODO: check the drawn card is valid to play
+
+    const join_order = 1; // TODO: FIX THIS
     try {
       const drawnCard = await Deck.getCard(req.drawnCard.id);
       const playCard = await Deck.getPlayCard(gameID);
@@ -111,7 +112,7 @@ router.post(
 
       //emit state evenif its not a valid card
       const hand = await Deck.getHand(gameID, userID);
-      io.emit(`deal:${gameID}:${userID}`, { hand });
+      io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       next();
     } catch (err) {
       console.log(err);
@@ -194,10 +195,10 @@ router.post(
 
     try {
       const players = await Games.getPlayers(gameID);
-      for (const { user_id: userID } of players) {
+      for (const { user_id: userID, join_order } of players) {
         const hand = await Deck.getHand(gameID, userID);
 
-        io.emit(`deal:${gameID}:${userID}`, { hand });
+        io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       }
 
       next();

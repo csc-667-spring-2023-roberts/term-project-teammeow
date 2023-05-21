@@ -9,7 +9,6 @@ const gameID = getGameID();
 const userID = getUserID();
 
 const messageDiv = document.querySelector("#chat #messages");
-const playCardDiv = document.querySelector("#play-card");
 
 io.on(
   CHAT_MESSAGE_RECEIVED + `:${gameID}`,
@@ -33,21 +32,69 @@ io.on(
   }
 );
 
-io.on(`deal:${gameID}:${userID}`, ({ hand }) => {
-  const cardsDiv = document.querySelector("#cards");
-  const drawCardDiv = document.querySelector("#draw-card");
+io.on(`deal:${gameID}:${userID}`, ({ hand, join_order }) => {
+  const player = document.querySelector("#player");
+  const drawCard = document.querySelector("#draw-card");
 
-  cardsDiv.innerHTML = "";
-  drawCardDiv.innerHTML = "";
+  const p = document.createElement("p");
+  const div = document.createElement("div");
+
+  const col = div.cloneNode(),
+    playerName = div.cloneNode(),
+    playerCards = div.cloneNode();
+
+  player.innerHTML = "";
+  drawCard.innerHTML = "";
+
+  col.setAttribute("class", "col");
+  playerName.setAttribute("class", "player-name");
+  playerCards.setAttribute("class", "player-cards row");
+
+  p.append(`Player ${join_order}`);
+  playerName.append(p);
 
   for (const card of hand) {
-    cardsDiv.append(createCard(card));
+    playerCards.append(createCard(card));
   }
 
-  drawCardDiv.append(createCard({ color: "black", value: "uno", id: 0 }));
+  col.append(playerName, playerCards);
+  player.append(col);
+
+  drawCard.append(createCard({ color: "black", value: "uno", id: 0 }));
 });
 
-io.on(`game-state:${gameID}`, ({ play_card }) => {
-  playCardDiv.innerHTML = "";
-  playCardDiv.appendChild(createCard(play_card));
+io.on(`game-state:${gameID}`, ({ play_card, hands: playerHands }) => {
+  const players = document.querySelector("#players");
+  const playCard = document.querySelector("#play-card");
+
+  const p = document.createElement("p");
+  const div = document.createElement("div");
+
+  players.innerHTML = "";
+  playCard.innerHTML = "";
+
+  for (const { user_id, join_order, hands } of playerHands) {
+    if (user_id == userID) continue;
+
+    const col = div.cloneNode(),
+      playerName = div.cloneNode(),
+      playerCards = div.cloneNode();
+
+    col.setAttribute("class", "col");
+    playerName.setAttribute("class", "player-name");
+    playerCards.setAttribute("class", "player-cards row");
+
+    p.append(`Player ${join_order}`);
+    playerName.append(p);
+
+    for (let i = 0; i < parseInt(hands); i++) {
+      playerCards.append(createCard({ color: "black", value: "uno", id: 0 }));
+    }
+
+    col.append(playerName, playerCards);
+
+    players.append(col);
+  }
+
+  playCard.appendChild(createCard(play_card));
 });
