@@ -9,10 +9,12 @@ module.exports = async (req, res, next) => {
   try {
     const playCard = await Deck.getPlayCard(gameID);
     if ((playCard.value = "reverse")) {
-      await Games.setPlayDirection(gameID, !play_direction);
+      req.game.play_direction = (
+        await Games.setPlayDirection(gameID, !play_direction)
+      ).play_direction;
     }
     next();
   } catch (err) {
-    res.status(405).json({ message: "could not revere" });
+    res.status(405).json({ message: "could not reverse" });
   }
 };

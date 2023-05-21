@@ -6,7 +6,6 @@ module.exports = async (req, res, next) => {
   const { join_order } = req.currentTurn;
   const { play_direction, players } = req.game;
   let nextPlayerJoinOrder = join_order;
-
   if (play_direction) {
     if (join_order >= players) {
       nextPlayerJoinOrder = 1;

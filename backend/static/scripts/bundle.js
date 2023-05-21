@@ -110,7 +110,7 @@
         s(210);
       var e = s(321),
         n = s.n(e);
-      const i = document.querySelector("#cards"),
+      const i = document.querySelector("#player"),
         r = document.querySelector("#draw-card"),
         o = document.querySelector("#start-game-btn");
       o &&
@@ -230,14 +230,14 @@
             : h;
         },
         k = String.fromCharCode(30);
-      function w(t) {
+      function _(t) {
         if (t)
           return (function (t) {
-            for (var e in w.prototype) t[e] = w.prototype[e];
+            for (var e in _.prototype) t[e] = _.prototype[e];
             return t;
           })(t);
       }
-      (w.prototype.on = w.prototype.addEventListener =
+      (_.prototype.on = _.prototype.addEventListener =
         function (t, e) {
           return (
             (this._callbacks = this._callbacks || {}),
@@ -245,16 +245,16 @@
             this
           );
         }),
-        (w.prototype.once = function (t, e) {
+        (_.prototype.once = function (t, e) {
           function s() {
             this.off(t, s), e.apply(this, arguments);
           }
           return (s.fn = e), this.on(t, s), this;
         }),
-        (w.prototype.off =
-          w.prototype.removeListener =
-          w.prototype.removeAllListeners =
-          w.prototype.removeEventListener =
+        (_.prototype.off =
+          _.prototype.removeListener =
+          _.prototype.removeAllListeners =
+          _.prototype.removeEventListener =
             function (t, e) {
               if (
                 ((this._callbacks = this._callbacks || {}),
@@ -273,7 +273,7 @@
                 }
               return 0 === n.length && delete this._callbacks["$" + t], this;
             }),
-        (w.prototype.emit = function (t) {
+        (_.prototype.emit = function (t) {
           this._callbacks = this._callbacks || {};
           for (
             var e = new Array(arguments.length - 1),
@@ -290,17 +290,17 @@
           }
           return this;
         }),
-        (w.prototype.emitReserved = w.prototype.emit),
-        (w.prototype.listeners = function (t) {
+        (_.prototype.emitReserved = _.prototype.emit),
+        (_.prototype.listeners = function (t) {
           return (
             (this._callbacks = this._callbacks || {}),
             this._callbacks["$" + t] || []
           );
         }),
-        (w.prototype.hasListeners = function (t) {
+        (_.prototype.hasListeners = function (t) {
           return !!this.listeners(t).length;
         });
-      const _ =
+      const w =
         "undefined" != typeof self
           ? self
           : "undefined" != typeof window
@@ -312,13 +312,13 @@
           {}
         );
       }
-      const A = _.setTimeout,
-        T = _.clearTimeout;
+      const A = w.setTimeout,
+        T = w.clearTimeout;
       function O(t, e) {
         e.useNativeTimers
-          ? ((t.setTimeoutFn = A.bind(_)), (t.clearTimeoutFn = T.bind(_)))
-          : ((t.setTimeoutFn = _.setTimeout.bind(_)),
-            (t.clearTimeoutFn = _.clearTimeout.bind(_)));
+          ? ((t.setTimeoutFn = A.bind(w)), (t.clearTimeoutFn = T.bind(w)))
+          : ((t.setTimeoutFn = w.setTimeout.bind(w)),
+            (t.clearTimeoutFn = w.clearTimeout.bind(w)));
       }
       class C extends Error {
         constructor(t, e, s) {
@@ -328,7 +328,7 @@
             (this.type = "TransportError");
         }
       }
-      class R extends w {
+      class R extends _ {
         constructor(t) {
           super(),
             (this.writable = !1),
@@ -370,11 +370,11 @@
         }
         pause(t) {}
       }
-      const S =
+      const N =
           "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split(
             ""
           ),
-        N = 64,
+        S = 64,
         L = {};
       let x,
         B = 0,
@@ -382,7 +382,7 @@
       function P(t) {
         let e = "";
         do {
-          (e = S[t % N] + e), (t = Math.floor(t / N));
+          (e = N[t % S] + e), (t = Math.floor(t / S));
         } while (t > 0);
         return e;
       }
@@ -390,7 +390,7 @@
         const t = P(+new Date());
         return t !== x ? ((B = 0), (x = t)) : t + "." + P(B++);
       }
-      for (; q < N; q++) L[S[q]] = q;
+      for (; q < S; q++) L[N[q]] = q;
       function M(t) {
         let e = "";
         for (let s in t)
@@ -414,14 +414,14 @@
         } catch (t) {}
         if (!e)
           try {
-            return new _[["Active"].concat("Object").join("X")](
+            return new w[["Active"].concat("Object").join("X")](
               "Microsoft.XMLHTTP"
             );
           } catch (t) {}
       }
       function H() {}
       const V = null != new F({ xdomain: !1 }).responseType;
-      class U extends w {
+      class U extends _ {
         constructor(t, e) {
           super(),
             O(this, e),
@@ -511,7 +511,7 @@
           this.cleanup();
         }
       }
-      function K() {
+      function $() {
         for (let t in U.requests)
           U.requests.hasOwnProperty(t) && U.requests[t].abort();
       }
@@ -519,18 +519,18 @@
         (U.requests = {}),
         "undefined" != typeof document &&
           ("function" == typeof attachEvent
-            ? attachEvent("onunload", K)
+            ? attachEvent("onunload", $)
             : "function" == typeof addEventListener &&
               addEventListener(
-                "onpagehide" in _ ? "pagehide" : "unload",
-                K,
+                "onpagehide" in w ? "pagehide" : "unload",
+                $,
                 !1
               ));
-      const $ =
+      const K =
           "function" == typeof Promise && "function" == typeof Promise.resolve
             ? (t) => Promise.resolve().then(t)
             : (t, e) => e(t, 0),
-        Y = _.WebSocket || _.MozWebSocket,
+        Y = w.WebSocket || w.MozWebSocket,
         z =
           "undefined" != typeof navigator &&
           "string" == typeof navigator.product &&
@@ -598,7 +598,7 @@
                     this.ws.send(t);
                   } catch (t) {}
                   n &&
-                    $(() => {
+                    K(() => {
                       (this.writable = !0), this.emitReserved("drain");
                     }, this.setTimeoutFn);
                 });
@@ -841,7 +841,7 @@
           r
         );
       }
-      class G extends w {
+      class G extends _ {
         constructor(t, e = {}) {
           super(),
             (this.writeBuffer = []),
@@ -1364,7 +1364,7 @@
           return n.unshift(s), n;
         }
       }
-      class dt extends w {
+      class dt extends _ {
         constructor(t) {
           super(), (this.reviver = t);
         }
@@ -1495,7 +1495,7 @@
         newListener: 1,
         removeListener: 1,
       });
-      class gt extends w {
+      class gt extends _ {
         constructor(t, e, s) {
           super(),
             (this.connected = !1),
@@ -1850,7 +1850,7 @@
         (bt.prototype.setJitter = function (t) {
           this.jitter = t;
         });
-      class vt extends w {
+      class vt extends _ {
         constructor(e, s) {
           var n;
           super(),
@@ -1979,7 +1979,7 @@
           }
         }
         ondecoded(t) {
-          $(() => {
+          K(() => {
             this.emitReserved("packet", t);
           }, this.setTimeoutFn);
         }
@@ -2061,7 +2061,7 @@
         }
       }
       const kt = {};
-      function wt(t, e) {
+      function _t(t, e) {
         "object" == typeof t && ((e = t), (t = void 0));
         const s = (function (t, e = "", s) {
             let n = t;
@@ -2102,17 +2102,16 @@
           a.socket(s.path, e)
         );
       }
-      Object.assign(wt, { Manager: vt, Socket: gt, io: wt, connect: wt });
-      var _t = s(387),
-        Et = s.n(_t),
+      Object.assign(_t, { Manager: vt, Socket: gt, io: _t, connect: _t });
+      var wt = s(387),
+        Et = s.n(wt),
         At = s(938),
         Tt = s.n(At),
         Ot = s(606);
-      const Ct = wt(),
+      const Ct = _t(),
         Rt = n()(),
-        St = Et()(),
-        Nt = document.querySelector("#chat #messages"),
-        Lt = document.querySelector("#play-card");
+        Nt = Et()(),
+        St = document.querySelector("#chat #messages");
       Ct.on(
         Ot.CHAT_MESSAGE_RECEIVED + `:${Rt}`,
         ({ username: t, message: e, timestamp: s }) => {
@@ -2127,18 +2126,50 @@
             n.setAttribute("class", "text-message"),
             i.append(o, r),
             n.append(a, i),
-            Nt.appendChild(n);
+            St.appendChild(n);
         }
       ),
-        Ct.on(`deal:${Rt}:${St}`, ({ hand: t }) => {
-          const e = document.querySelector("#cards"),
-            s = document.querySelector("#draw-card");
-          (e.innerHTML = ""), (s.innerHTML = "");
-          for (const s of t) e.append(Tt()(s));
-          s.append(Tt()({ color: "black", value: "uno", id: 0 }));
+        Ct.on(`deal:${Rt}:${Nt}`, ({ hand: t, join_order: e }) => {
+          const s = document.querySelector("#player"),
+            n = document.querySelector("#draw-card"),
+            i = document.createElement("p"),
+            r = document.createElement("div"),
+            o = r.cloneNode(),
+            a = r.cloneNode(),
+            c = r.cloneNode();
+          (s.innerHTML = ""),
+            (n.innerHTML = ""),
+            o.setAttribute("class", "col"),
+            a.setAttribute("class", "player-name"),
+            c.setAttribute("class", "player-cards row"),
+            i.append(`Player ${e}`),
+            a.append(i);
+          for (const e of t) c.append(Tt()(e));
+          o.append(a, c),
+            s.append(o),
+            n.append(Tt()({ color: "black", value: "uno", id: 0 }));
         }),
-        Ct.on(`game-state:${Rt}`, ({ play_card: t }) => {
-          (Lt.innerHTML = ""), Lt.appendChild(Tt()(t));
+        Ct.on(`game-state:${Rt}`, ({ play_card: t, hands: e }) => {
+          const s = document.querySelector("#players"),
+            n = document.querySelector("#play-card"),
+            i = document.createElement("p"),
+            r = document.createElement("div");
+          (s.innerHTML = ""), (n.innerHTML = "");
+          for (const { user_id: t, join_order: n, hands: o } of e) {
+            if (t == Nt) continue;
+            const e = r.cloneNode(),
+              a = r.cloneNode(),
+              c = r.cloneNode();
+            e.setAttribute("class", "col"),
+              a.setAttribute("class", "player-name"),
+              c.setAttribute("class", "player-cards row"),
+              i.append(`Player ${n}`),
+              a.append(i);
+            for (let t = 0; t < parseInt(o); t++)
+              c.append(Tt()({ color: "black", value: "uno", id: 0 }));
+            e.append(a, c), s.append(e);
+          }
+          n.appendChild(Tt()(t));
         });
     })();
 })();
