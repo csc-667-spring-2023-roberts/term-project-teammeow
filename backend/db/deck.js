@@ -42,15 +42,21 @@ class Deck {
     }
   };
 
-  static dealCard = async (gameID, userID) => {
-    var { id: cardID } = await db.one(
-      "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 AND card_id < 55 ORDER BY random() limit 1",
-      [gameID]
+  static drawCard = async (gameID, userID) => {
+    const { id } = await db.one(
+      `
+        UPDATE game_deck 
+        SET updated_at = CURRENT_TIMESTAMP, user_id = $1
+        WHERE id = (
+          SELECT id FROM game_deck 
+          WHERE game_id = $2 AND user_id = 0 AND card_id < 55 
+          ORDER BY random() limit 1
+        ) RETURNING *
+      `,
+      [userID, gameID]
     );
-    return await db.one(
-      "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *",
-      [userID, cardID]
-    );
+
+    return await this.getCard(id);
   };
 
   static getHand = async (gameID, userID) =>
@@ -61,11 +67,12 @@ class Deck {
         INNER JOIN canonical_cards 
         ON game_deck.card_id = canonical_cards.id 
         WHERE game_id = $1 AND user_id = $2
+        ORDER BY game_deck.updated_at
       `,
       [gameID, userID]
     );
 
-  static getNumCardsInHand = async (gameID, userID) =>
+  static getNumCardsInHand = async (gameID) =>
     await db.many(
       `
         SELECT gd.user_id, COUNT(gd.card_id) as hands, gp.join_order FROM game_deck gd 
@@ -73,7 +80,7 @@ class Deck {
         WHERE gd.game_id = $1
         GROUP BY gd.user_id, gp.join_order
       `,
-      [gameID, userID]
+      [gameID]
     );
 
   static getPlayCard = (gameID) =>

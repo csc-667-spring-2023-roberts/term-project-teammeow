@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 const { Games, Deck } = require("../../db");
+
+const nextPlayer = require("./nextPlayer");
 const isUsersTurn = require("./isUsersTurn");
 const isValidMove = require("./isValidMove");
-const nextPlayer = require("./nextPlayer");
 const isReverseCard = require("./isReverseCard");
 const sendGameState = require("./sendGameState");
 
@@ -78,29 +79,13 @@ router.post(
   isUsersTurn,
   nextPlayer,
   async (req, res, next) => {
-    const io = req.app.get("io");
     const { id: gameID } = req.params;
     const { id: userID } = req.session.user;
 
     try {
-      req.drawnCard = await Deck.dealCard(gameID, userID);
-
-      next();
-    } catch (err) {
-      console.log(err);
-    }
-  },
-  async (req, res, next) => {
-    const io = req.app.get("io");
-    const { id: gameID } = req.params;
-    const { id: userID } = req.session.user;
-    // TODO: check the drawn card is valid to play
-
-    const join_order = 1; // TODO: FIX THIS
-    try {
-      const drawnCard = await Deck.getCard(req.drawnCard.id);
       const playCard = await Deck.getPlayCard(gameID);
-      //valid card, play it
+      const drawnCard = await Deck.drawCard(gameID, userID);
+
       if (
         playCard.value == drawnCard.value ||
         playCard.color == drawnCard.color ||
@@ -110,34 +95,41 @@ router.post(
         await Deck.updateCard(drawnCard.id, -2);
       }
 
-      //emit state evenif its not a valid card
-      const hand = await Deck.getHand(gameID, userID);
-      io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       next();
     } catch (err) {
       console.log(err);
     }
   },
-  async (req, res) => {
-    const io = req.app.get("io");
+  async (req, res, next) => {
     const { id: gameID } = req.params;
     const { join_order } = req.nextPlayer;
 
     try {
       await Games.setNextPlayer(gameID, join_order);
-      const play_card = await Deck.getPlayCard(gameID);
-      const players = await Games.getPlayers(gameID);
-      const hands = players.map(async ({ user_id: userID }) => {
-        const numCards = await Deck.getNumCardsInHand(gameID, userID);
-        return { id: userID, hand: numCards };
-      });
-      io.emit(`game-state:${gameID}`, { play_card, hands });
 
-      res.status(200).json({ message: "Success!" });
+      next();
     } catch (err) {
       console.log(err);
     }
-  }
+    await Games.setNextPlayer(gameID, join_order);
+  },
+  async (req, res, next) => {
+    const io = req.app.get("io");
+    const { id: gameID } = req.params;
+
+    try {
+      const players = await Games.getPlayers(gameID);
+
+      for (const { user_id: userID, join_order } of players) {
+        const hand = await Deck.getHand(gameID, userID);
+        io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
+      }
+      next();
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  sendGameState
 );
 
 router.post(
@@ -210,12 +202,5 @@ router.post(
   },
   sendGameState
 );
-
-router.post("/pass-turn/:id", isUsersTurn, async (req, res, next) => {
-  const { id: gameID } = req.params;
-
-  // TODO: this API receives a request to pass the turn
-  // when a valid card drawn, but not want to play
-});
 
 module.exports = router;
