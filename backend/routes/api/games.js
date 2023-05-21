@@ -8,6 +8,7 @@ const isUsersTurn = require("./isUsersTurn");
 const isValidMove = require("./isValidMove");
 const isReverseCard = require("./isReverseCard");
 const sendGameState = require("./sendGameState");
+const sendPlayerHand = require("./sendPlayerHand");
 
 router.post("/create", async (req, res) => {
   const { room, players } = req.body;
@@ -111,24 +112,8 @@ router.post(
     } catch (err) {
       console.log(err);
     }
-    await Games.setNextPlayer(gameID, join_order);
   },
-  async (req, res, next) => {
-    const io = req.app.get("io");
-    const { id: gameID } = req.params;
-
-    try {
-      const players = await Games.getPlayers(gameID);
-
-      for (const { user_id: userID, join_order } of players) {
-        const hand = await Deck.getHand(gameID, userID);
-        io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
-      }
-      next();
-    } catch (err) {
-      console.log(err);
-    }
-  },
+  sendPlayerHand,
   sendGameState
 );
 
@@ -183,23 +168,7 @@ router.post(
       console.log(err);
     }
   },
-  async (req, res, next) => {
-    const io = req.app.get("io");
-    const { id: gameID } = req.params;
-
-    try {
-      const players = await Games.getPlayers(gameID);
-      for (const { user_id: userID, join_order } of players) {
-        const hand = await Deck.getHand(gameID, userID);
-
-        io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
-      }
-
-      next();
-    } catch (err) {
-      console.log(err);
-    }
-  },
+  sendPlayerHand,
   sendGameState
 );
 
