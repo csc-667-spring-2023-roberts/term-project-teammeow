@@ -161,11 +161,13 @@ router.post(
       }
 
       let nextPlayerJoinOrder = nextPlayer.join_order;
+      const gameMaxPlayers = (await Games.getGameByID(gameID)).players;
       //skip the next player if +2, +4, or skip
       if (
         play_card.value == "skip" ||
         play_card.value == "+2" ||
-        play_card.value == "+4"
+        play_card.value == "+4" ||
+        (play_card.value == "reverse" && gameMaxPlayers == 2)
       ) {
         if (play_direction) {
           if (nextPlayerJoinOrder >= players) {

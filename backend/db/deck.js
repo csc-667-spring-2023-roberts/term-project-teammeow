@@ -23,7 +23,7 @@ class Deck {
     }
     //set one card for play
     var { id: cardID } = await db.one(
-      "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
+      "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 AND card_id < 55 ORDER BY random() limit 1",
       [gameID]
     );
     db.none("UPDATE game_deck SET user_id = -2 WHERE id = $1", [cardID]);
