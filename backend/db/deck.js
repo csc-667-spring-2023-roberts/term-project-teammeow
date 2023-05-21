@@ -25,19 +25,6 @@ class Deck {
     db.none("UPDATE game_deck SET user_id = -2 WHERE id = $1", [cardID]);
   };
 
-  static dealHand = async (gameID, userID) => {
-    for (let i = 0; i < 7; i++) {
-      var { id: cardID } = await db.one(
-        "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
-        [gameID]
-      );
-      await db.none(
-        "UPDATE game_deck SET user_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2",
-        [userID, cardID]
-      );
-    }
-  };
-
   static dealCards = async (gameID, userID, numCards) => {
     for (let i = 0; i < numCards; i++) {
       var { id: cardID } = await db.one(
@@ -64,11 +51,13 @@ class Deck {
 
   static getHand = async (gameID, userID) =>
     await db.many(
-      `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
-      FROM game_deck 
-      INNER JOIN canonical_cards 
-      ON game_deck.card_id = canonical_cards.id 
-      WHERE game_id = $1 AND user_id = $2 `,
+      `
+        SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
+        FROM game_deck 
+        INNER JOIN canonical_cards 
+        ON game_deck.card_id = canonical_cards.id 
+        WHERE game_id = $1 AND user_id = $2
+      `,
       [gameID, userID]
     );
 
@@ -85,27 +74,25 @@ class Deck {
 
   static getPlayCard = (gameID) =>
     db.one(
-      `SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
-      FROM game_deck 
-      INNER JOIN canonical_cards 
-      ON game_deck.card_id = canonical_cards.id 
-      WHERE game_id = $1 AND user_id = -2 `,
+      `
+        SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
+        FROM game_deck 
+        INNER JOIN canonical_cards 
+        ON game_deck.card_id = canonical_cards.id 
+        WHERE game_id = $1 AND user_id = -2
+      `,
       [gameID]
     );
-  static getState = async (gameID, userID) => {
-    const hand = await this.getHand(gameID, userID);
-    const playCard = await this.getPlayCard(gameID);
-    return { user_id: userID, game_id: gameID, hand, playCard };
-  };
 
   static getCard = async (cardID) =>
     db.one(
       `
-  SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
-  FROM game_deck 
-  INNER JOIN canonical_cards 
-  ON game_deck.card_id = canonical_cards.id 
-  WHERE game_deck.id = $1`,
+        SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
+        FROM game_deck 
+        INNER JOIN canonical_cards 
+        ON game_deck.card_id = canonical_cards.id 
+        WHERE game_deck.id = $1
+      `,
       [cardID]
     );
 

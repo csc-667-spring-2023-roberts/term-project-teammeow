@@ -61,7 +61,7 @@ router.post(
       const players = await Games.getPlayers(gameID);
 
       for (const { user_id: userID } of players) {
-        await Deck.dealHand(gameID, userID);
+        await Deck.dealCards(gameID, userID, 7);
         const hand = await Deck.getHand(gameID, userID);
 
         io.emit(`deal:${gameID}:${userID}`, { hand });
