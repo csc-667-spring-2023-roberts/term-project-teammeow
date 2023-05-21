@@ -9,6 +9,7 @@ const isValidMove = require("./isValidMove");
 const isReverseCard = require("./isReverseCard");
 const sendGameState = require("./sendGameState");
 const sendPlayerHand = require("./sendPlayerHand");
+const isWildCard = require("./isWildCard");
 
 router.post("/create", async (req, res) => {
   const { room, players } = req.body;
@@ -67,12 +68,19 @@ router.post(
         const hand = await Deck.getHand(gameID, userID);
         io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       }
+
+      req.playedCard = await Deck.getPlayCard(gameID);
+
       next();
     } catch (err) {
       console.log(err);
     }
   },
-  sendGameState
+  sendGameState,
+  isWildCard,
+  (req, res) => {
+    res.status(200).json({ message: "Success!" });
+  }
 );
 
 router.post(
@@ -114,13 +122,17 @@ router.post(
     }
   },
   sendPlayerHand,
-  sendGameState
+  sendGameState,
+  (req, res) => {
+    res.status(200).json({ message: "Success!" });
+  }
 );
 
 router.post(
   "/move/:id",
   isUsersTurn,
   isValidMove,
+  isWildCard,
   isReverseCard,
   nextPlayer,
   async (req, res, next) => {
@@ -169,7 +181,10 @@ router.post(
     }
   },
   sendPlayerHand,
-  sendGameState
+  sendGameState,
+  (req, res) => {
+    res.status(200).json({ message: "Success!" });
+  }
 );
 
 module.exports = router;

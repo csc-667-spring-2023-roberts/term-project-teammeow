@@ -18,6 +18,9 @@ module.exports = async (req, res, next) => {
       await Deck.updateCard(playCard.id, -1);
       await Deck.updateCard(playedCard.id, -2);
 
+      req.playedCard = playedCard;
+      req.playCard = playCard;
+
       next();
     } else {
       res.status(405).json({ message: "invalid move" });

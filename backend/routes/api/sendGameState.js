@@ -1,6 +1,6 @@
 const { Deck } = require("../../db");
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   const io = req.app.get("io");
   const { id: gameID } = req.params;
 
@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 
     io.emit(`game-state:${gameID}`, { play_card, hands });
 
-    res.status(200).json({ message: "Success!" });
+    next();
   } catch (err) {
     console.log(err);
   }

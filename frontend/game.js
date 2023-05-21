@@ -3,6 +3,7 @@ import getGameID from "./getGameId";
 const player = document.querySelector("#player");
 const drawCard = document.querySelector("#draw-card");
 const startBtn = document.querySelector("#start-game-btn");
+const colorPicker = document.querySelector("#color-picker");
 
 startBtn &&
   startBtn.addEventListener("click", (e) => {
@@ -33,4 +34,18 @@ drawCard &&
       method: "post",
       headers: { "Content-Type": "application/json" },
     });
+  });
+
+colorPicker &&
+  colorPicker.addEventListener("click", (e) => {
+    const id = e.target.getAttribute("data-card-id");
+    const gameID = getGameID();
+
+    fetch(`/api/game/move/${gameID}`, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+
+    colorPicker.innerHTML = "";
   });

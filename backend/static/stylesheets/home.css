@@ -128,17 +128,27 @@ th {
   /* height: inherit; */
 }
 
-.card-red {
+.color-picker {
+  width: 70px;
+  height: 70px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+.card-red,
+.red {
   background-color: red;
 }
-.card-blue {
+.card-blue,
+.blue {
   background-color: blue;
 }
-.card-green {
+.card-green,
+.green {
   background-color: green;
 }
-.card-yellow {
-  background-color: yellow;
+.card-yellow,
+.yellow {
+  background-color: #ffbe0b;
 }
 
 .card-black {
@@ -158,7 +168,7 @@ th {
   color: green;
 }
 .card-yellow .label span {
-  color: yellow;
+  color: #ffbe0b;
 }
 
 .card-black .label span {

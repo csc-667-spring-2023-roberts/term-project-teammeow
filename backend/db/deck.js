@@ -107,6 +107,18 @@ class Deck {
       [cardID]
     );
 
+  static getWildCards = async (gameID, value) =>
+    db.many(
+      `
+        SELECT gd.id, c.value, c.color 
+        FROM game_deck gd 
+        LEFT JOIN canonical_cards c 
+        ON gd.card_id=c.id 
+        WHERE card_id > 54 AND game_id = $1 and value = $2;
+      `,
+      [gameID, value]
+    );
+
   static updateCard = async (cardID, userID) =>
     db.one(`UPDATE game_deck SET user_id = $1 where id = $2 RETURNING *`, [
       userID,

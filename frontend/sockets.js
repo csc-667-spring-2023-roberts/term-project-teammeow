@@ -65,7 +65,7 @@ io.on(`deal:${gameID}:${userID}`, ({ hand, join_order }) => {
   // remove start button
 
   const startBtn = document.querySelector("#start-game-btn-container");
-  startBtn.style.display = "none";
+  startBtn && (startBtn.style.display = "none");
 });
 
 io.on(`game-state:${gameID}`, ({ play_card, hands: playerHands }) => {
@@ -102,4 +102,16 @@ io.on(`game-state:${gameID}`, ({ play_card, hands: playerHands }) => {
   }
 
   playCard.appendChild(createCard(play_card));
+});
+
+io.on(`pick-color:${gameID}:${userID}`, ({ wildCards }) => {
+  const colorPicker = document.querySelector("#color-picker");
+
+  for (const card of wildCards) {
+    const div = document.createElement("div");
+    div.setAttribute("class", `${card.color} color-picker`);
+    div.setAttribute("data-card-id", card.id);
+
+    colorPicker.append(div);
+  }
 });
