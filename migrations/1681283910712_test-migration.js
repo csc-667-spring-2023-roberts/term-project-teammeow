@@ -205,6 +205,16 @@ exports.up = (pgm) => {
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('+2','red' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('wild','black' );`);
   pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('+4','black' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('wild','green' );`);
+  pgm.sql(
+    `INSERT INTO canonical_cards(value, color) VALUES('wild','yellow' );`
+  );
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('wild','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('wild','red' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('+4','green' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('+4','yellow' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('+4','blue' );`);
+  pgm.sql(`INSERT INTO canonical_cards(value, color) VALUES('+4','red' );`);
 };
 
 /**

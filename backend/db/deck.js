@@ -2,12 +2,16 @@ const db = require("./connection");
 class Deck {
   static create = async (gameID) => {
     //create deck of 108 cards
-    for (var i = 1; i <= 54; i++) {
+
+    for (var i = 1; i <= 62; i++) {
+      //2 x 1-9, skip, +2, reverse for each color
       let k = 2;
-      if (i == 1 || i == 14 || i == 27 || i == 40) {
+      //1 x 0 for each color
+      //1 x wild and +4 of each color to play when player selects a color from playing a wild
+      if (i == 1 || i == 14 || i == 27 || i == 40 || i > 54) {
         k = 1;
       }
-      if (i > 52) {
+      if ((i == 53) | (i == 54)) {
         k = 4;
       }
       for (var j = 0; j < k; j++) {
@@ -28,7 +32,7 @@ class Deck {
   static dealCards = async (gameID, userID, numCards) => {
     for (let i = 0; i < numCards; i++) {
       var { id: cardID } = await db.one(
-        "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
+        "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 AND card_id < 55 ORDER BY random() limit 1",
         [gameID]
       );
       await db.any(
@@ -40,7 +44,7 @@ class Deck {
 
   static dealCard = async (gameID, userID) => {
     var { id: cardID } = await db.one(
-      "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 ORDER BY random() limit 1",
+      "SELECT id FROM game_deck WHERE game_id = $1 AND user_id = 0 AND card_id < 55 ORDER BY random() limit 1",
       [gameID]
     );
     return await db.one(
