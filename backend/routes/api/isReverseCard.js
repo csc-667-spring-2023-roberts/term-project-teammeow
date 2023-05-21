@@ -3,12 +3,11 @@ const { Games } = require("../../db");
 
 // checks if the played card is valid
 module.exports = async (req, res, next) => {
-  const { id: cardID } = req.body;
   const { id: gameID } = req.params;
+  const { play_direction } = req.game;
 
   try {
     const playCard = await Deck.getPlayCard(gameID);
-    const { play_direction } = req.game;
     if ((playCard.value = "reverse")) {
       await Games.setPlayDirection(gameID, !play_direction);
     }

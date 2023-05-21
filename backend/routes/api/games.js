@@ -6,6 +6,7 @@ const isUsersTurn = require("./isUsersTurn");
 const isValidMove = require("./isValidMove");
 const nextPlayer = require("./nextPlayer");
 const isReverseCard = require("./isReverseCard");
+const sendGameState = require("./sendGameState");
 
 router.post("/create", async (req, res) => {
   const { room, players } = req.body;
@@ -49,45 +50,29 @@ router.post("/join/:id", async (req, res) => {
   }
 });
 
-router.post("/start/:id", async (req, res) => {
-  const io = req.app.get("io");
-  const { id: gameID } = req.params;
+router.post(
+  "/start/:id",
+  async (req, res, next) => {
+    const io = req.app.get("io");
+    const { id: gameID } = req.params;
 
-  try {
-    await Deck.create(gameID);
-    const players = await Games.getPlayers(gameID);
-    players.forEach(async ({ user_id: userID }) => {
-      await Deck.dealHand(gameID, userID);
-      const hand = await Deck.getHand(gameID, userID);
-      console.log("playerID: ", userID);
-      console.log("hand: ", hand);
-      io.emit(`deal:${gameID}:${userID}`, { hand });
-    });
-    const play_card = await Deck.getPlayCard(gameID);
-    // emit how many cards each user have, and the play_card
-    // following is the format:
-    // play_card: {
-    //   id: 1, // cardID
-    //   value: 2, // card value
-    //   color: "green", // card color
-    // },
-    const hands = players.map(async ({ user_id: userID }) => {
-      const numCards = await Deck.getNumCardsInHand(gameID, userID);
-      return { id: userID, hand: numCards };
-    });
-    console.log("play_card ", play_card);
-    const state = {
-      play_card,
-      hands,
-    };
+    try {
+      await Deck.create(gameID);
+      const players = await Games.getPlayers(gameID);
 
-    io.emit(`game-state:${gameID}`, state);
+      for (const { user_id: userID } of players) {
+        await Deck.dealHand(gameID, userID);
+        const hand = await Deck.getHand(gameID, userID);
 
-    res.status(200).json({ message: "Success!" });
-  } catch (err) {
-    console.log(err);
-  }
-});
+        io.emit(`deal:${gameID}:${userID}`, { hand });
+      }
+      next();
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  sendGameState
+);
 
 router.post(
   "/draw/:id",
@@ -161,7 +146,6 @@ router.post(
   isReverseCard,
   nextPlayer,
   async (req, res, next) => {
-    const io = req.app.get("io");
     const { id: gameID } = req.params;
     const { players, play_direction } = req.game;
     const nextPlayer = req.nextPlayer;
@@ -171,12 +155,8 @@ router.post(
       //deal cards to the next player if +2 or +4
       if (play_card.value == "+2") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 2);
-        // const hand = await Deck.getHand(nextPlayer.user_id);
-        // io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
       } else if (play_card.value == "+4") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 4);
-        // const hand = await Deck.getHand(nextPlayer.user_id);
-        // io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
       }
 
       let nextPlayerJoinOrder = nextPlayer.join_order;
@@ -208,27 +188,24 @@ router.post(
       console.log(err);
     }
   },
-  async (req, res) => {
+  async (req, res, next) => {
     const io = req.app.get("io");
     const { id: gameID } = req.params;
-    const { id: userID } = req.session.user;
 
     try {
-      const hand = await Deck.getHand(gameID, userID);
-      const play_card = await Deck.getPlayCard(gameID);
       const players = await Games.getPlayers(gameID);
-      const hands = players.map(async ({ user_id: userID }) => {
-        const numCards = await Deck.getNumCardsInHand(gameID, userID);
-        return { id: userID, hand: numCards };
-      });
-      io.emit(`deal:${gameID}:${userID}`, { hand });
-      io.emit(`game-state:${gameID}`, { play_card, hands });
+      for (const { user_id: userID } of players) {
+        const hand = await Deck.getHand(gameID, userID);
 
-      res.status(200).json({ message: "Success!" });
+        io.emit(`deal:${gameID}:${userID}`, { hand });
+      }
+
+      next();
     } catch (err) {
       console.log(err);
     }
-  }
+  },
+  sendGameState
 );
 
 router.post("/pass-turn/:id", isUsersTurn, async (req, res, next) => {
