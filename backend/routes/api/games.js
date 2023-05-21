@@ -58,6 +58,7 @@ router.post(
   async (req, res, next) => {
     const io = req.app.get("io");
     const { id: gameID } = req.params;
+    const { id: userID } = req.session.user;
 
     try {
       await Deck.create(gameID);
@@ -68,6 +69,9 @@ router.post(
         const hand = await Deck.getHand(gameID, userID);
         io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       }
+
+      const { join_order } = await Games.getCurrentTurn(gameID, userID);
+      await Games.setNextPlayer(gameID, join_order);
 
       req.playedCard = await Deck.getPlayCard(gameID);
 
