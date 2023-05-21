@@ -171,12 +171,12 @@ router.post(
       //deal cards to the next player if +2 or +4
       if (play_card.value == "+2") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 2);
-        const hand = await Deck.getHand(nextPlayer.user_id);
-        io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
+        // const hand = await Deck.getHand(nextPlayer.user_id);
+        // io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
       } else if (play_card.value == "+4") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 4);
-        const hand = await Deck.getHand(nextPlayer.user_id);
-        io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
+        // const hand = await Deck.getHand(nextPlayer.user_id);
+        // io.emit(`deal:${gameID}:${nextPlayer.user_id}`, { hand });
       }
 
       let nextPlayerJoinOrder = nextPlayer.join_order;
