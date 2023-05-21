@@ -168,7 +168,7 @@ router.post(
 
     try {
       const play_card = await Deck.getPlayCard(gameID);
-
+      //deal cards to the next player if +2 or +4
       if (play_card.value == "+2") {
         await Deck.dealCards(gameID, nextPlayer.user_id, 2);
         const hand = await Deck.getHand(nextPlayer.user_id);
@@ -180,7 +180,7 @@ router.post(
       }
 
       let nextPlayerJoinOrder = nextPlayer.join_order;
-
+      //skip the next player if +2, +4, or skip
       if (
         play_card.value == "skip" ||
         play_card.value == "+2" ||
