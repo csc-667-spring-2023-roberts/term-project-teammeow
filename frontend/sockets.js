@@ -61,6 +61,11 @@ io.on(`deal:${gameID}:${userID}`, ({ hand, join_order }) => {
   player.append(col);
 
   drawCard.append(createCard({ color: "black", value: "uno", id: 0 }));
+
+  // remove start button
+
+  const startBtn = document.querySelector("#start-game-btn-container");
+  startBtn.style.display = "none";
 });
 
 io.on(`game-state:${gameID}`, ({ play_card, hands: playerHands }) => {
