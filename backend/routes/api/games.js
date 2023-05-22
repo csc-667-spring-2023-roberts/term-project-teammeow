@@ -16,16 +16,17 @@ const isSkipCard = require("./isSkipCard");
 
 router.post("/create", async (req, res) => {
   const { room, players } = req.body;
-  const {
-    user: { id: userID },
-  } = req.session;
-  try {
-    const game = await Games.create(userID, players, room);
-    await Games.join(game.id, userID, 1);
+  const { id: userID } = req.session.user;
+  if (room.length > 0 && players) {
+    try {
+      const game = await Games.create(userID, players, room);
+      await Games.join(game.id, userID, 1);
 
-    res.redirect(`/game/${game.id}`);
-  } catch (err) {
-    console.log(err);
+      res.redirect(`/game/${game.id}`);
+    } catch (err) {
+      res.redirect("/lobby");
+    }
+  } else {
     res.redirect("/lobby");
   }
 });
