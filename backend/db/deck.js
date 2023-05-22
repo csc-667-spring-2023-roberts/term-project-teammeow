@@ -76,7 +76,7 @@ class Deck {
     await db.many(
       `
         SELECT gd.user_id, COUNT(gd.card_id) as hands, gp.join_order FROM game_deck gd 
-        INNER JOIN game_players gp ON gd.user_id = gp.user_id 
+        INNER JOIN game_players gp ON gd.user_id = gp.user_id and gd.game_id = gp.game_id
         WHERE gd.game_id = $1
         GROUP BY gd.user_id, gp.join_order
       `,
