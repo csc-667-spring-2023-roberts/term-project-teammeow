@@ -1,3 +1,5 @@
+import getGameID from "./getGameId";
+
 const input = document.querySelector("#chat input#chat-input");
 const button = document.querySelector("#chat button#send-btn");
 
@@ -5,12 +7,14 @@ input &&
   input.addEventListener("keydown", ({ target, keyCode }) => {
     if (keyCode !== 13) return;
 
-    const url = target.getAttribute("data-url");
+    const gameID = getGameID();
     const message = target.value;
+
+    if (message.length == 0) return;
 
     target.value = "";
 
-    fetch(url, {
+    fetch(`/chat/${gameID}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),
@@ -19,12 +23,14 @@ input &&
 
 button &&
   button.addEventListener("click", (e) => {
-    const url = input.getAttribute("data-url");
+    const gameID = getGameID();
     const message = input.value;
+
+    if (message.length == 0) return;
 
     input.value = "";
 
-    fetch(url, {
+    fetch(`/chat/${gameID}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message }),

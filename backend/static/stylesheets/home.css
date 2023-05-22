@@ -76,7 +76,9 @@ th {
   max-width: 100%;
   min-height: 1px;
 }
-
+.flex {
+  flex: 1;
+}
 .align-center {
   align-items: center;
 }

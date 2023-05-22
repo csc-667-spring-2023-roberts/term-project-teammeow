@@ -12,31 +12,38 @@
       </div>
     </div>
   </div>
-  <div>
-    <% if(locals.user.id == created_by) { %>
-      <div id='start-game-btn-container' class="col justify-center">
-        <button id='start-game-btn' type="button">Start</button>
-      </div>
-    <% } %>
-
-    <div class="col">
-      <div class="row">
-        <div class="col">
-          <div id="draw-card"></div>
+  <div class="row">
+    <div class="col flex">
+      <% if(locals.user.id == created_by) { %>
+        <div id='start-game-btn-container' class="col justify-center">
+          <button id='start-game-btn' type="button">Start</button>
         </div>
-        <div class="col">
-          <div id="play-card"></div>
+      <% } %>
+  
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <div id="draw-card"></div>
+          </div>
+          <div class="col">
+            <div id="play-card"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div id='color-picker' class="row"></div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col">
-          <div id='color-picker' class="row"></div>
-        </div>
-      </div>
+  
+      <div id="players"></div>
+      <div id="player"></div>
     </div>
-
-    <div id="players"></div>
-    <div id="player"></div>
+    <div class="col">
+      <%- include('partials/chat') %>
+    </div>
   </div>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

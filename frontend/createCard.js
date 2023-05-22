@@ -3,8 +3,6 @@ module.exports = ({ value, color, id }) => {
   const div = document.createElement("div");
   const span = document.createElement("span");
 
-  // span.className = `card-${value}`;
-
   const col = div.cloneNode(),
     card = div.cloneNode(),
     label = div.cloneNode();
