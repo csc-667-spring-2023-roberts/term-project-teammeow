@@ -85,12 +85,14 @@ io.on(`game-state:${gameID}`, ({ play_card, hands: playerHands }) => {
       playerName = div.cloneNode(),
       playerCards = div.cloneNode();
 
+    const playerNameText = p.cloneNode();
+
     col.setAttribute("class", "col");
     playerName.setAttribute("class", "player-name");
     playerCards.setAttribute("class", "player-cards row");
 
-    p.append(`Player ${join_order}`);
-    playerName.append(p);
+    playerNameText.append(`Player ${join_order}`);
+    playerName.append(playerNameText);
 
     for (let i = 0; i < parseInt(hands); i++) {
       playerCards.append(createCard({ color: "black", value: "uno", id: 0 }));
