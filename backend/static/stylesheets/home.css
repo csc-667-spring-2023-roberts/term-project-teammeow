@@ -1,9 +1,80 @@
 * {
   margin: 0px;
   padding: 0px;
+  font-family: "Poppins", sans-serif, serif;
 }
+ul li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+a:visited {
+  color: white;
+}
+a:hover {
+  color: #bedaec;
+}
+table {
+  margin: auto;
+  width: 50%;
+  border-collapse: collapse;
+}
+input {
+  width: 300px;
+  height: 40px;
+  font-size: 16px;
+  margin: 5px 0px 15px;
+  padding: 0px 10px;
+  border: lightgrey solid 1px;
+  border-radius: 5px;
+}
+select {
+  width: 100px;
+  height: 40px;
+  font-size: 16px;
+  margin: 5px 0px 15px;
+  padding: 0px 10px;
+  border: lightgrey solid 1px;
+  border-radius: 5px;
+}
+
+button {
+  width: 300px;
+  height: 40px;
+  margin: 15px 0px;
+  cursor: pointer;
+  background-color: #357196;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #053c5e;
+}
+button:active {
+  background-color: #276185;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
 .row {
   display: flex;
+  flex-flow: row wrap;
+  min-width: 0;
+}
+
+.col {
+  position: relative;
+  max-width: 100%;
+  min-height: 1px;
 }
 
 .align-center {
@@ -30,7 +101,7 @@
 
 table {
   margin: auto;
-  width: 50%;
+  width: 800px;
   border-collapse: collapse;
 }
 
@@ -41,136 +112,35 @@ th {
   padding: 8px;
 }
 
-#chat {
-  width: 400px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid black;
-}
-#chat #messages {
-  height: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-}
-
-#chat #messages > div {
-  width: 70%;
-  margin-bottom: 10px;
-}
-
-#chat #messages .text-message div {
-  background: lightgrey;
-  border-radius: 5px;
-  padding: 5px;
-}
-
-#chat #messages .text-message p:nth-child(2) {
-  color: grey;
-  font-size: 14px;
-  text-align: right;
-  margin-top: 5px;
-}
-
-#chat input {
-  width: 100%;
-  height: 40px;
-  font-size: 18px;
-  padding: 0px 5px;
-}
-
-#chat #send-btn {
-  width: 70px;
-}
-
-.card {
-  width: 100px;
-  height: 100%;
-  border-radius: 8px;
-  position: relative;
-  border: solid 1px grey;
-  cursor: pointer;
-}
-
-.card * {
-  pointer-events: none;
-}
-
-.card .label {
-  top: 0px;
-  height: 100%;
-  display: flex;
-  width: inherit;
-  position: absolute;
-  justify-content: center;
-  align-items: center;
-}
-
-.card > span {
-  top: 15px;
-  left: 15px;
-  z-index: 99;
+.nav-bar {
+  height: 60px;
+  padding: 0px 20px;
+  background-color: #1f7a8c;
   color: white;
-  font-size: 18px;
-  position: absolute;
 }
 
-.card > span:last-child {
-  top: auto;
-  left: auto;
-  right: 15px;
-  bottom: 15px;
-  transform: rotate(180deg);
+.nav-bar li {
+  margin: 0px 10px;
 }
 
-.card img {
-  width: inherit;
-  /* height: inherit; */
+.form-container {
+  height: 50%;
+  margin: 30px 30px;
 }
-
-.color-picker {
-  width: 70px;
-  height: 70px;
-  transform: rotate(45deg);
+.form-container .error-message {
+  color: #db222a;
+  text-align: center;
+}
+.container button {
+  width: 100px;
+}
+.container .join-btn {
   cursor: pointer;
 }
-.card-red,
-.red {
-  background-color: red;
-}
-.card-blue,
-.blue {
-  background-color: blue;
-}
-.card-green,
-.green {
-  background-color: green;
-}
-.card-yellow,
-.yellow {
-  background-color: #ffbe0b;
-}
 
-.card-black {
-  background-color: black;
+.container .join-btn:hover {
+  color: #1f7a8c;
 }
-
-.card .label span {
-  font-size: 30px;
-}
-.card-red .label span {
-  color: red;
-}
-.card-blue .label span {
-  color: blue;
-}
-.card-green .label span {
-  color: green;
-}
-.card-yellow .label span {
-  color: #ffbe0b;
-}
-
-.card-black .label span {
-  color: black;
+.container .join-btn:active {
+  color: #276185;
 }

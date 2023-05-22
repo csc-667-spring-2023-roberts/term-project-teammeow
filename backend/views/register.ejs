@@ -1,47 +1,58 @@
 <html>
   <%- include('partials/head') %>
   <body>
-    <h1>Sign Up Page</h1>
-
-    <%- include('partials/navigation') %>
-    <form method="post" action="<%= form_submit_url %>">
-      <% if(locals.errorMessage) { %>
-        <p><%= locals.errorMessage %></p>
-      <% } %>
-      <div>
-        <label for="username">Username</label>
-        <div>
-          <input 
-            name="username" 
-            autocomplete="username" 
-            placeholder="Username"
-          />
+    <div class="row nav-bar justify-space-between align-center">
+      <div class="col">
+        <h2>Sign-up page</h2>
+      </div>
+      <div class="col">
+        <div class="row">
+          <%- include('partials/navigation') %>
         </div>
       </div>
-      <div>
-        <label for="email">Email</label>
+    </div>
+    <div class="row align-center justify-center form-container">
+      <form method="post" action="<%= form_submit_url %>">
         <div>
-          <input 
-            name="email" 
-            autocomplete="email" 
-            placeholder="Email address" 
-          />
+          <label for="username">Username</label>
+          <div>
+            <input 
+              name="username" 
+              autocomplete="username" 
+              placeholder="Username"
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <label for="password">Password</label>
         <div>
-          <input 
-            name="password" 
-            type="password" 
-            autocomplete="new-password" 
-            placeholder="Create a password"
-          />
+          <label for="email">Email</label>
+          <div>
+            <input 
+              name="email" 
+              autocomplete="email" 
+              placeholder="Email address" 
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <button type="submit">Register</button>
-      </div>
-    </form>
+        <div>
+          <label for="password">Password</label>
+          <div>
+            <input 
+              name="password" 
+              type="password" 
+              autocomplete="new-password" 
+              placeholder="Create a password"
+            />
+          </div>
+        </div>
+        <% if(locals.errorMessage) { %>
+          <div class="error-message">
+            <p><%= locals.errorMessage %></p>
+          </div>
+        <% } %>
+        <div>
+          <button type="submit">Register</button>
+        </div>
+      </form>
+    </div>
   </body>
 </html>

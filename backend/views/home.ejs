@@ -1,7 +1,15 @@
 <html>
   <%- include('partials/head') %>
   <body>
-    <h1>Home Page</h1>
-    <%- include('partials/navigation.ejs') %>
+    <div class="row nav-bar justify-space-between align-center">
+      <div class="col">
+        <h2>Home Page</h2>
+      </div>
+      <div class="col">
+        <div class="row">
+          <%- include('partials/navigation') %>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

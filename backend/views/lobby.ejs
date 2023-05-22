@@ -11,49 +11,53 @@
   }
 </script>
 <body>
-  <h1>AUTHENTICATED</h1>
-  <%- include('partials/navigation') %>
-  <div>
-    <div>
-      <table id="game-room-list">
-        <thead>
-          <th>ID</th>
-          <th>Game room</th>
-          <th>Players</th>
-          <th>Players joined</th>
-          <th>Action</th>
-        </thead>
-        <tbody>
-          <% for (game of games) { %>
-            <tr>
-              <td><%= game.id %></td>
-              <td><%= game.room_title %></td>
-              <td><%= game.players %></td>
-              <td><%= game.players_joined %></td>
-              <td><a onclick="joinGame('<%= game.id %>')">Join</a></td>
-            </tr>
-          <% } %>
-        </tbody>
-      </table>
+  <div class="row nav-bar justify-space-between align-center">
+    <div class="col">
+      <h2><%= locals.user.username %></h2>
     </div>
-    <div>
-      <form action="api/game/create" method="post">
-        <input 
-          type="text"
-          name="room" 
-          placeholder="Room name"
-        />
-        <select name="players">
-          <option value="">Select</option>
-          <% for(let i = 2; i < 5; i++) { %>
-            <option value="<%= i %>"><%= i %></option>
-          <% } %>
-        </select>
-        <button type="submit">
-          Create
-        </button>
-      </form>
+    <div class="col">
+      <div class="row">
+        <%- include('partials/navigation') %>
+      </div>
     </div>
+  </div>
+  <div class="row align-center justify-center container">
+    <form action="api/game/create" method="post">
+      <input 
+        type="text"
+        name="room" 
+        placeholder="Room name"
+      />
+      <select name="players">
+        <option value="">Select</option>
+        <% for(let i = 2; i < 5; i++) { %>
+          <option value="<%= i %>"><%= i %></option>
+        <% } %>
+      </select>
+      <button type="submit">
+        Create
+      </button>
+    </form>
+  </div>
+  <div class="row align-center justify-center container">
+    <table id="game-room-list">
+      <thead>
+        <th>Game room</th>
+        <th>Players</th>
+        <th>Players joined</th>
+        <th>Action</th>
+      </thead>
+      <tbody>
+        <% for (game of games) { %>
+          <tr>
+            <td><%= game.room_title %></td>
+            <td><%= game.players %></td>
+            <td><%= game.players_joined %></td>
+            <td><p class='join-btn' onclick="joinGame('<%= game.id %>')">Join</p></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 </body>
 </html>

@@ -2,10 +2,17 @@
 <html lang="en">
 <%- include('partials/head') %>
 <body>
-  <div>
+  <div class="row nav-bar justify-space-between align-center">
     <div class="col">
-      <%- include('partials/navigation') %>
+      <h2><%= locals.user.username %></h2>
     </div>
+    <div class="col">
+      <div class="row">
+        <%- include('partials/navigation') %>
+      </div>
+    </div>
+  </div>
+  <div>
     <% if(locals.user.id == created_by) { %>
       <div id='start-game-btn-container' class="col justify-center">
         <button id='start-game-btn' type="button">Start</button>

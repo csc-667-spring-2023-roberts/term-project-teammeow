@@ -1,7 +1,5 @@
-<ul>
-  <li><a href="/">Home</a></li>
+<ul class="row align-center">
   <% if(locals.user) { %>
-    <li><a href="/lobby">Lobby</a></li>
     <li><a href="/auth/logout">Logout</a></li>
   <% } else { %>
     <li><a href="/auth/login">Login</a></li>
