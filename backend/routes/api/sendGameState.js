@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 
     io.emit(`game-state:${gameID}`, { play_card, hands });
 
-    next();
+    res.status(200).json({ message: "Success!" });
   } catch (err) {
     console.log(err);
   }

@@ -3,13 +3,16 @@ const router = express.Router();
 
 const { Games, Deck } = require("../../db");
 
-const nextPlayer = require("./nextPlayer");
+const isDrawCard = require("./isDrawCard");
+const isWildCard = require("./isWildCard");
 const isUsersTurn = require("./isUsersTurn");
 const isValidMove = require("./isValidMove");
 const isReverseCard = require("./isReverseCard");
 const sendGameState = require("./sendGameState");
 const sendPlayerHand = require("./sendPlayerHand");
-const isWildCard = require("./isWildCard");
+const getNextPlayer = require("./getNextPlayer");
+const setNextPlayer = require("./setNextPlayer");
+const isSkipCard = require("./isSkipCard");
 
 router.post("/create", async (req, res) => {
   const { room, players } = req.body;
@@ -56,41 +59,44 @@ router.post("/join/:id", async (req, res) => {
 router.post(
   "/start/:id",
   async (req, res, next) => {
-    const io = req.app.get("io");
     const { id: gameID } = req.params;
     const { id: userID } = req.session.user;
 
     try {
+      const { current_player, play_direction, players, join_order } =
+        await Games.getCurrentTurn(gameID, userID);
+      req.nextPlayer = { join_order, user_id: userID };
+      req.game = { current_player, play_direction, players };
+
+      next();
+    } catch (err) {}
+  },
+  async (req, res, next) => {
+    const { id: gameID } = req.params;
+    try {
       await Deck.create(gameID);
       const players = await Games.getPlayers(gameID);
 
-      for (const { user_id: userID, join_order } of players) {
+      for (const { user_id: userID } of players) {
         await Deck.dealCards(gameID, userID, 7);
-        const hand = await Deck.getHand(gameID, userID);
-        io.emit(`deal:${gameID}:${userID}`, { hand, join_order });
       }
-
-      const { join_order } = await Games.getCurrentTurn(gameID, userID);
-      await Games.setNextPlayer(gameID, join_order);
-
-      req.playedCard = await Deck.getPlayCard(gameID);
 
       next();
     } catch (err) {
       console.log(err);
     }
   },
-  sendGameState,
   isWildCard,
-  (req, res) => {
-    res.status(200).json({ message: "Success!" });
-  }
+  isDrawCard,
+  isSkipCard,
+  setNextPlayer,
+  sendPlayerHand,
+  sendGameState
 );
 
 router.post(
   "/draw/:id",
   isUsersTurn,
-  nextPlayer,
   async (req, res, next) => {
     const { id: gameID } = req.params;
     const { id: userID } = req.session.user;
@@ -113,82 +119,27 @@ router.post(
       console.log(err);
     }
   },
-  async (req, res, next) => {
-    const { id: gameID } = req.params;
-    const { join_order } = req.nextPlayer;
-
-    try {
-      await Games.setNextPlayer(gameID, join_order);
-
-      next();
-    } catch (err) {
-      console.log(err);
-    }
-  },
+  getNextPlayer,
+  isWildCard,
+  isDrawCard,
+  isSkipCard,
+  setNextPlayer,
   sendPlayerHand,
-  sendGameState,
-  (req, res) => {
-    res.status(200).json({ message: "Success!" });
-  }
+  sendGameState
 );
 
 router.post(
   "/move/:id",
   isUsersTurn,
   isValidMove,
-  isWildCard,
   isReverseCard,
-  nextPlayer,
-  async (req, res, next) => {
-    const { id: gameID } = req.params;
-    const { players, play_direction } = req.game;
-    const nextPlayer = req.nextPlayer;
-
-    try {
-      const play_card = await Deck.getPlayCard(gameID);
-      //deal cards to the next player if +2 or +4
-      if (play_card.value == "+2") {
-        await Deck.dealCards(gameID, nextPlayer.user_id, 2);
-      } else if (play_card.value == "+4") {
-        await Deck.dealCards(gameID, nextPlayer.user_id, 4);
-      }
-
-      let nextPlayerJoinOrder = nextPlayer.join_order;
-      const gameMaxPlayers = (await Games.getGameByID(gameID)).players;
-      //skip the next player if +2, +4, or skip
-      if (
-        play_card.value == "skip" ||
-        play_card.value == "+2" ||
-        play_card.value == "+4" ||
-        (play_card.value == "reverse" && gameMaxPlayers == 2)
-      ) {
-        if (play_direction) {
-          if (nextPlayerJoinOrder >= players) {
-            nextPlayerJoinOrder = 1;
-          } else {
-            nextPlayerJoinOrder++;
-          }
-        } else {
-          if (nextPlayerJoinOrder <= 1) {
-            nextPlayerJoinOrder = players;
-          } else {
-            nextPlayerJoinOrder--;
-          }
-        }
-      }
-
-      await Games.setNextPlayer(gameID, nextPlayerJoinOrder);
-
-      next();
-    } catch (err) {
-      console.log(err);
-    }
-  },
+  getNextPlayer,
+  isWildCard,
+  isDrawCard,
+  isSkipCard,
+  setNextPlayer,
   sendPlayerHand,
-  sendGameState,
-  (req, res) => {
-    res.status(200).json({ message: "Success!" });
-  }
+  sendGameState
 );
 
 module.exports = router;

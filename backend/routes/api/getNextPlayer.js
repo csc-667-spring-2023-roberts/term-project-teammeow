@@ -21,8 +21,10 @@ module.exports = async (req, res, next) => {
   }
 
   try {
-    nextPlayer = await Users.getUserByJoinOrder(gameID, nextPlayerJoinOrder);
-    req.nextPlayer = nextPlayer;
+    req.nextPlayer = await Users.getUserByJoinOrder(
+      gameID,
+      nextPlayerJoinOrder
+    );
     next();
   } catch (err) {
     console.log(err);

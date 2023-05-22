@@ -1,8 +1,8 @@
 const db = require("./connection");
 class Deck {
   static create = async (gameID) => {
+    await db.none("DELETE FROM game_deck WHERE game_id = $1", [gameID]);
     //create deck of 108 cards
-
     for (var i = 1; i <= 62; i++) {
       //2 x 1-9, skip, +2, reverse for each color
       let k = 2;

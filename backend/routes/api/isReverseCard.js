@@ -1,5 +1,4 @@
-const { Deck } = require("../../db");
-const { Games } = require("../../db");
+const { Deck, Games } = require("../../db");
 
 // checks if the played card is valid
 module.exports = async (req, res, next) => {

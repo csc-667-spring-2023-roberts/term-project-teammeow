@@ -7,16 +7,15 @@ module.exports = async (req, res, next) => {
   const { id: userID } = req.session.user;
 
   try {
-    const playedCard = req.playedCard;
+    const playedCard = await Deck.getPlayCard(gameID);
 
     if (playedCard.color == "black") {
+      req.wildCardPlayed = true;
       const wildCards = await Deck.getWildCards(gameID, playedCard.value);
       io.emit(`pick-color:${gameID}:${userID}`, { wildCards });
-
-      res.status(200).json({ message: "Success" });
-    } else {
-      next();
     }
+
+    next();
   } catch (err) {
     console.log(err);
     res.status(405).json({ message: "invalid move" });
