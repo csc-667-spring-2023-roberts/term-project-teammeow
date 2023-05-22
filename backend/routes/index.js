@@ -7,20 +7,17 @@ const chatRoutes = require("./chat");
 const lobbyRoutes = require("./lobby");
 const gameAPIRoutes = require("./api/games");
 
-const { isAuthenticated, isAuthenticatedRedirect } = require("../middleware");
+const { isAuthenticated } = require("../middleware");
 
-router.get("/", isAuthenticated, (request, response) => {
-  response.render("home", {
-    title: "Hi World!",
-    message: "Our first template.",
-  });
+router.get("/", isAuthenticated, (req, res) => {
+  res.redirect("/lobby");
 });
 
 router.use("/auth", authRoutes);
-router.use(isAuthenticatedRedirect);
+router.use(isAuthenticated);
 router.use("/game", gameRoutes);
-router.use("/api/game", gameAPIRoutes);
 router.use("/chat", chatRoutes);
 router.use("/lobby", lobbyRoutes);
+router.use("/api/game", gameAPIRoutes);
 
 module.exports = router;
