@@ -60,7 +60,7 @@ class Deck {
   };
 
   static getHand = async (gameID, userID) =>
-    await db.many(
+    await db.any(
       `
         SELECT game_deck.id, canonical_cards.value, canonical_cards.color 
         FROM game_deck 
