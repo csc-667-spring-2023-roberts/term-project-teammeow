@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head') %>
+<script defer>
+  const gameStarted = () => {
+    const path = location.pathname.split("/");
+    const gameID = path[path.length - 1];
+
+    fetch(`/game/started/${gameID}`, { method:'get'})
+  }
+
+  setTimeout(gameStarted, 1500);
+</script>
 <body>
   <div class="row nav-bar justify-space-between align-center">
     <div class="col">
