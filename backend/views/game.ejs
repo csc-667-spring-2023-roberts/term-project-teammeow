@@ -13,30 +13,31 @@
     </div>
   </div>
   <div class="row">
-    <div class="col flex">
-      <% if(locals.user.id == created_by) { %>
-        <div id='start-game-btn-container' class="col justify-center">
-          <button id='start-game-btn' type="button">Start</button>
-        </div>
-      <% } %>
-  
-      <div class="col">
-        <div class="row">
-          <div class="col">
-            <div id="draw-card"></div>
+    <div class="col flex game-room">
+      <div id="players"></div>
+      <div class="drawer">
+        <% if(locals.user.id == created_by) { %>
+          <div id='start-game-btn-container' class="col justify-center">
+            <button id='start-game-btn' type="button">Start</button>
           </div>
-          <div class="col">
-            <div id="play-card"></div>
+        <% } %>
+        <div class="col">
+          <div class="row justify-center align-center">
+            <div class="col">
+              <div id="draw-card"></div>
+            </div>
+            <div class="col">
+              <div id="play-card"></div>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div id='color-picker' class="row"></div>
+          <div class="row">
+            <div class="col">
+              <div id='color-picker' class="row"></div>
+            </div>
           </div>
         </div>
       </div>
-  
-      <div id="players"></div>
+
       <div id="player"></div>
     </div>
     <div class="col">
