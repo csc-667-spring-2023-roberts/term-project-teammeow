@@ -18,6 +18,6 @@ module.exports = async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    res.status(405).json({ message: "invalid move" });
+    res.status(403).json({ message: "invalid move" });
   }
 };

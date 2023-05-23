@@ -36,7 +36,6 @@ router.post("/register", async (req, res) => {
 
       res.redirect("/lobby");
     } catch (error) {
-      console.log(error);
       res.json({ error });
     }
   } else {
@@ -66,7 +65,6 @@ router.post("/login", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     res.locals.errorMessage = "Username or password is incorrect";
     res.render("login", {
       title: "Login page",

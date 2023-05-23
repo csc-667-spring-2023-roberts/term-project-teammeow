@@ -15,9 +15,9 @@ module.exports = async (req, res, next) => {
 
       next();
     } else {
-      res.status(405).json({ message: "not your turn" });
+      res.status(403).json({ message: "not your turn" });
     }
   } catch (err) {
-    res.status(405).json({ message: "not your turn" });
+    res.status(403).json({ message: "not your turn" });
   }
 };
