@@ -1,20 +1,27 @@
 #chat {
   width: 400px;
   height: calc(100vh - 60px);
-  display: flex;
-  flex-direction: column;
   border-left: 1px solid lightgray;
 }
-#chat #messages {
-  height: 100%;
-  padding: 5px;
+#chat > div:first-child {
+  padding: 10px;
   box-sizing: border-box;
 }
 
-/* #chat #messages > div {
+#chat input {
+  margin: 0px !important;
+}
+
+#chat button {
+  width: 100%;
+  height: 100%;
+  margin: 0px !important;
+}
+
+#chat #messages > div {
   width: 70%;
   margin-bottom: 10px;
-} */
+}
 
 #chat #messages .text-message div {
   background: lightgrey;
@@ -29,26 +36,14 @@
   margin-top: 5px;
 }
 
-#chat input {
-  width: 300px;
-  margin: 0px !important;
-  /* height: 40px;
-  font-size: 18px;
-  padding: 0px 5px; */
-}
-
-#chat button {
-  width: 50px;
-  margin: 0px !important;
-}
-
 .card {
-  width: 100px;
-  height: 100%;
-  border-radius: 8px;
+  width: 60px;
+  height: 90px;
+  border-radius: 3px;
   position: relative;
-  border: solid 1px grey;
+  border: solid 0.5px grey;
   cursor: pointer;
+  margin: 0px 5px;
 }
 
 .card * {
@@ -57,34 +52,32 @@
 
 .card .label {
   top: 0px;
+  width: 100%;
   height: 100%;
-  display: flex;
-  width: inherit;
+  font-size: 20px;
   position: absolute;
-  justify-content: center;
-  align-items: center;
 }
 
 .card > span {
-  top: 15px;
-  left: 15px;
+  top: 7px;
+  left: 7px;
   z-index: 99;
   color: white;
-  font-size: 18px;
+  font-size: 12px;
   position: absolute;
 }
 
 .card > span:last-child {
   top: auto;
   left: auto;
-  right: 15px;
-  bottom: 15px;
+  right: 7px;
+  bottom: 7px;
   transform: rotate(180deg);
 }
 
 .card img {
   width: inherit;
-  /* height: inherit; */
+  height: inherit;
 }
 
 .color-picker {
@@ -93,43 +86,35 @@
   transform: rotate(45deg);
   cursor: pointer;
 }
-.card-red,
+
 .red {
-  background-color: red;
+  background-color: #ff3c38;
 }
-.card-blue,
 .blue {
-  background-color: blue;
+  background-color: #276fbf;
 }
-.card-green,
+.black {
+  background-color: #092327;
+}
 .green {
-  background-color: green;
+  background-color: #1c7c54;
 }
-.card-yellow,
 .yellow {
   background-color: #ffbe0b;
 }
 
-.card-black {
-  background-color: black;
+.red .label span {
+  color: #ff3c38;
 }
-
-.card .label span {
-  font-size: 30px;
+.blue .label span {
+  color: #276fbf;
 }
-.card-red .label span {
-  color: red;
+.black .label span {
+  color: #092327;
 }
-.card-blue .label span {
-  color: blue;
+.green .label span {
+  color: #1c7c54;
 }
-.card-green .label span {
-  color: green;
-}
-.card-yellow .label span {
+.yellow .label span {
   color: #ffbe0b;
-}
-
-.card-black .label span {
-  color: black;
 }

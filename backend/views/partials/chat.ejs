@@ -1,19 +1,23 @@
-<div id="chat">
-  <h2>Chat</h2>
-  <div id="messages">
-
-  </div>
-  <div class="row">
-    <div>
-      <input
-        type="text" 
-        name="message" 
-        id="chat-input"
-        placeholder="Message"
-      >
+<div id="chat" class="row direction-col">
+  <div class="col flex">
+    <div class="col">
+      <h2>Chat</h2>
     </div>
-    <div>
-      <button id="send-btn">Send</button>
+    <div id='messages'></div>
+  </div>
+  <div class="col">
+    <div class="row">
+      <div class="col">
+        <input
+          type="text" 
+          name="message" 
+          id="chat-input"
+          placeholder="Message"
+        >
+      </div>
+      <div class="col flex">
+        <button id="send-btn">Send</button>
+      </div>
     </div>
   </div>
 </div>
