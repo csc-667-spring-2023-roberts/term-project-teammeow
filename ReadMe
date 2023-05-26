@@ -1,3 +1,5 @@
+https://teammeow-project.onrender.com/
+
 notes on this project
 
 games table:
@@ -17,4 +19,12 @@ if -1 card has been played
 if -2 then top is on top of the played deck,
 play on this card
 
-.
+
+Game Rules
+At start 
+  SKIP skips starting players turn
+  +2 deals 2 cards to starting player and skips turn
+  +4 deals 4 cards to starting player, starting player chooses color, but skips turn
+Player can draw a card instead of playing a card
+Player draws one card if they cannot play, must play the card if playable
+Standard UNO rules otherwise
